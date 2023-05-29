@@ -2,7 +2,7 @@
 # coding: utf-8
 
 ### import modules ###
-from asyncore import read
+from asyncore import read #from モジュール　import メソッドor変数
 from tkinter import X
 import xml.etree.ElementTree as ET
 import sys

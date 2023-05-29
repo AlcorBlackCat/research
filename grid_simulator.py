@@ -22,7 +22,7 @@ from obstacle import Obstacle
 
 ### simulation settings ###
 #infilename = "grid3x3.net.xml"
-infilename = "grid5x5.net.xml"
+infilename = "grid5x5.net.xml"#別ファイルからマップ情報を引っ張ってきている
 #infilename = "tsudanuma.net.xml"
 #infilename = "sfc_small.net.xml"
 

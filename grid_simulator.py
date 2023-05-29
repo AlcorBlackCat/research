@@ -2,18 +2,18 @@
 # coding: utf-8
 
 ### import modules ###
-from asyncore import read #from モジュール　import メソッドor変数
-from tkinter import X
-import xml.etree.ElementTree as ET
-import sys
-import matplotlib.pyplot as plt
-import networkx as nx
-import numpy as np
-from matplotlib.animation import FuncAnimation
-import math
-import copy
-import csv
-from time import sleep
+from asyncore import read #from モジュール　import メソッドor変数 非同期で同時に複数動かすためのモジュール？　readが何なのかは不明。
+from tkinter import X #GUIモジュール　xについては不明
+import xml.etree.ElementTree as ET #xmlファイルを扱うためのモジュール
+import sys #Pythonのインタプリタや実行環境に関する情報を扱うモジュール
+import matplotlib.pyplot as plt #グラフ描画に関するモジュール
+import networkx as nx #ネットワーク、グラフを生成する。恐らくmatplotlibと併用
+import numpy as np #効率的な計算を行うためのモジュール、行列やベクトル向け？
+from matplotlib.animation import FuncAnimation #複数のプロットを連続で表示してアニメーションを描画。シミュレーション中の描画と考えられる。
+import math #数学計算用関数のモジュール
+import copy #行列型等の数値において参照ではなくコピーを行うためのモジュール
+import csv #csvファイルを管理するためのモジュール
+from time import sleep #処理を一時停止させる関数
 
 from grid_car import Car
 from lane import Lane

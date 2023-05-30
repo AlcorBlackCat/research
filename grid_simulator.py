@@ -38,47 +38,47 @@ number_of_cars = 300 #一般車両
 number_of_obstacles = 10 #通行不能箇所数
 number_of_fake_cars = 1 #悪意のある車両数
 number_of_fake_obstacles = 1 #偽の通行不能箇所数
-oppcomm_rate = 1.0
-sensitivity = 1.0
+oppcomm_rate = 1.0  #
+sensitivity = 1.0  #感度
 
-math_count = 0
-avoid_count = 0
+math_count = 0 #数字カウント
+avoid_count = 0 #通行不能個所？カウント
 
-file_name = "result(" + str(a) + ") " + infilename + str(number_of_cars) + " " + str(number_of_obstacles) + " " + str(number_of_fake_cars) + " " + str(number_of_fake_obstacles) + ".csv"
-folder_name = "result(csv)"
-if number_of_fake_cars >= 1:
- folder_name = "fake_result(csv)"
+file_name = "result(" + str(a) + ") " + infilename + str(number_of_cars) + " " + str(number_of_obstacles) + " " + str(number_of_fake_cars) + " " + str(number_of_fake_obstacles) + ".csv"   #ファイル名を指定した値で連結し決定
+folder_name = "result(csv)"    #folder_nameはresult(csv)に保存
+if number_of_fake_cars >= 1:    #もし悪意のある車両が１以上ならば
+ folder_name = "fake_result(csv)"    #folder_nameはフォルダー名fake_result(csv)に保存
 
-folder_name2 = "moving_distance"
-folder_name3 = "goal_time"
+folder_name2 = "moving_distance"    #folder_name2はmoving_distanceに保存
+folder_name3 = "goal_time"    #folder_name2はgoal_timeに保存
 
-print(number_of_cars,number_of_obstacles,number_of_fake_cars,number_of_fake_obstacles)
+print(number_of_cars,number_of_obstacles,number_of_fake_cars,number_of_fake_obstacles) #()内のものを出力
 # functions
 #xmlファイルを読み込み
-def read_parse_netxml(infilename):
+def read_parse_netxml(infilename):  #resd_perse_netxml(引数名)で定義
   # open file
-  infile = open(infilename, "r")
+  infile = open(infilename, "r")  #infilnameを読み込み用でオープン
 
   # parsing xml 
-  root = ET.fromstring(infile.read())
+  root = ET.fromstring(infile.read())  # XML を文字列から Element に直接パースします    ETはXML データを解析および作成するシンプルかつ効率的な API を実装するモジュール
   #print(root.tag, root.attrib)
-  return root
+  return root   #返り値をrootに格納　　　（rootを使うとこれらの処理の結果が用いられる）
 
 #ネットワークの作成
-def create_road_network(root):
+def create_road_network(root):   #65行目で返したrootを引数に指定し、create_road_networkを定義
   # read edge tagged data for reading the road network
   # create data structure of road network using NetworkX
-  x_y_dic = {} # input: node's x,y pos, output: node id
-  lane_dic = {}
-  edge_length_dic = {}
-  node_id = 0
-  lane_id = 0
+  x_y_dic = {} # input: node's x,y pos, output: node id  空の辞書の作成
+  lane_dic = {}  #空の辞書の作成
+  edge_length_dic = {}  #空の辞書の作成
+  node_id = 0   #node_idの初期値を0に  node=各辺の交点？
+  lane_id = 0   #lane_idの初期値0に   lane=道路?
  
-  DG = nx.DiGraph() # Directed graph of road network
-  edge_lanes_list = [] # list of lane instances
-  for child in root:
-    if child.tag == "edge":
-      lane = Lane()
+  DG = nx.DiGraph()   # Directed graph of road network  有向グラフの場合の空のグラフ作成
+  edge_lanes_list = []   # list of lane instances   空のリストの作成   辺、線のリスト
+  for child in root:   #変数childにrootの要素が順に代入
+    if child.tag == "edge":  #もし、childのtagが"edge"に等しいならば
+      lane = Lane()   #lane=クラスlane
       if "from" in child.attrib and "to" in child.attrib:
         lane.add_from_to(child.attrib["from"], child.attrib["to"])
 

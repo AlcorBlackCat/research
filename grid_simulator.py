@@ -15,10 +15,10 @@ import copy #行列型等の数値において参照ではなくコピーを行�
 import csv #csvファイルを管理するためのモジュール
 from time import sleep #処理を一時停止させる関数
 
-from grid_car import Car
-from lane import Lane
-from grid_road_segment import RoadSegment
-from obstacle import Obstacle
+from grid_car import Car #詳細はgrid_car.py参照
+from lane import Lane #lane.py
+from grid_road_segment import RoadSegment #grid_road_segment.py
+from obstacle import Obstacle #obstacle.py
 
 ### simulation settings ###
 #infilename = "grid3x3.net.xml"

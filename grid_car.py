@@ -2,10 +2,10 @@ import networkx as nx
 import numpy as np
 import math
 import copy
-import pprint
+import pprint #リストなどを整列して出力や文字列に変換をするライブラリ
 
 class Car:
-  def __init__(self, orig_node_id, dest_node_id, dest_lane_id, shortest_path, current_lane_id, DG, fakecar_flag):
+  def __init__(self, orig_node_id, dest_node_id, dest_lane_id, shortest_path, current_lane_id, DG, fakecar_flag):　#__init__はクラスの初期化メソッド、selfは必須の第一引数。クラスのインスタンス自身を指す。以降は引数。
     self.orig_node_id  = orig_node_id #起点
     self.dest_node_id  = dest_node_id #終点
     self.dest_lane_id = dest_lane_id

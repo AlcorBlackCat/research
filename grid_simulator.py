@@ -76,14 +76,14 @@ def create_road_network(root):   #65行目で返したrootを引数に指定し�
  
   DG = nx.DiGraph()   # Directed graph of road network  有向グラフの場合の空のグラフ作成
   edge_lanes_list = []   # list of lane instances   空のリストの作成   辺、線のリスト
-  for child in root:   #変数childにrootの要素が順に代入
+  for child in root:   #変数childにrootの要素が順に代入          #この辺のtagやattribはxmlファイルの読み込み関係
     if child.tag == "edge":  #もし、childのtagが"edge"に等しいならば
       lane = Lane()   #lane=クラスlane
-      if "from" in child.attrib and "to" in child.attrib:
-        lane.add_from_to(child.attrib["from"], child.attrib["to"])
+      if "from" in child.attrib and "to" in child.attrib:   #もしfromとtoがchild.attribに含まれる場合
+        lane.add_from_to(child.attrib["from"], child.attrib["to"])   #laneに要素を追加？
 
-      for child2 in child:
-        data_list  = child2.attrib["shape"].split(" ")
+      for child2 in child:   #child2にchildの要素を順に代入、その後にそれぞれのリストを定義している
+        data_list  = child2.attrib["shape"].split(" ")  
         node_id_list = []
         node_x_list = []; node_y_list = []
         distance_list = []

@@ -19,11 +19,11 @@ class Obstacle:   #クラスの定義    この中では通行不能個所につ
       current_node_id = self.obstacle_node_id   #current_node_idはobstacle_node_idというインスタンス
       #print("通行不能箇所" + str(current_node_id))
     else:                                     #それ以外ならcurrent_node_idはfakeobs_node_id 
-      current_node_id = self.fakeobs_node_id    #
+      current_node_id = self.fakeobs_node_id    #current_node_idにfakeobs_node_id（通行不能個所）インスタンスを入れる
       #print("偽の通行不能箇所" + str(current_node_id))
-    self.current_position = DG.nodes[ current_node_id ]["pos"]
+    self.current_position = DG.nodes[ current_node_id ]["pos"]   #DG = nx.DiGraph() Directed graph of road network?  DGのnodeの[][]で指定した要素を持ってくる
 
-  def move(self):
-    x_new = self.current_position[0]
-    y_new = self.current_position[1]
-    return x_new, y_new
+  def move(self):   #moveの定義
+    x_new = self.current_position[0]   #x_newはcurrent_positionの0の属性
+    y_new = self.current_position[1]    #y_newはcurrent_positionの1の属性
+    return x_new, y_new    #返り値をx_newとy_newに格納   (x_new,y_newを使うとこれらの処理の結果が用いられる)

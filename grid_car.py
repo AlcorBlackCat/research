@@ -5,30 +5,30 @@ import copy
 import pprint #リストなどを整列して出力や文字列に変換をするライブラリ
 
 class Car:
-  def __init__(self, orig_node_id, dest_node_id, dest_lane_id, shortest_path, current_lane_id, DG, fakecar_flag):　#__init__はクラスの初期化メソッド、selfは必須の第一引数。クラスのインスタンス自身を指す。以降は引数。
+  def __init__(self, orig_node_id, dest_node_id, dest_lane_id, shortest_path, current_lane_id, DG, fakecar_flag): #__init__はクラスの初期化メソッド、selfは必須の第一引数。クラスのインスタンス自身を指す。以降は引数。
     self.orig_node_id  = orig_node_id #起点
     self.dest_node_id  = dest_node_id #終点
-    self.dest_lane_id = dest_lane_id
+    self.dest_lane_id = dest_lane_id    #道路
     self.shortest_path = shortest_path #最短経路
     self.current_lane_id =  current_lane_id #現在のレーン
     self.current_sp_index = 0 #最短経路のindex
     self.current_speed = 0.0
-    self.current_start_node = []
-    self.current_position = []
-    self.current_end_node = []
-    self.obstacles_info_list = []
-    self.current_distance = 0.0
-    self.number_of_shortest_path_changes = 0
-    self.number_of_opportunistic_communication = 0
+    self.current_start_node = []   #最新または現在の開始位置
+    self.current_position = []   #最新または現在の位置
+    self.current_end_node = []    #最新または現在の終了位置
+    self.obstacles_info_list = []   #通行不能所
+    self.current_distance = 0.0   #最新または現在の道のり、距離
+    self.number_of_shortest_path_changes = 0   #最短経路の変更数
+    self.number_of_opportunistic_communication = 0    #すれ違い通信数
     self.elapsed_time = 0 #経過時間
-    self.moving_distance = 0
-    self.goal_arrived = False
-    self.DG_copied = copy.deepcopy(DG)
-    self.opportunistic_communication_frag = True
+    self.moving_distance = 0  #移動距離
+    self.goal_arrived = False   #ゴール到着はFalse
+    self.DG_copied = copy.deepcopy(DG)   #ディープコピーも一方のオブジェクトをもう一方に複製する動作　　オブジェクトがリストなどの属性を持っていたとして、シャシャローコピーはそのリストのコピーには参照を使うが、ディープコピーはリストの要素を再帰的にコピーして複製　DGをコピーする
+    self.opportunistic_communication_frag = True  #
 
-    self.short_path = []
-    self.obstacle_dic = {}
-    self.fakecar_flag = fakecar_flag
+    self.short_path = []  #最短経路?
+    self.obstacle_dic = {}   #通行不能個所の空の辞書？
+    self.fakecar_flag = fakecar_flag   #fakecar_flag  おそらく悪意を持った車両
 
   #車線に関するパラメータ
   def init(self, DG):

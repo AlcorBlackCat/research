@@ -20,18 +20,18 @@ count = 0
 number_of_cars = 300
 half_number_of_cars = int(number_of_cars/2)
 
-for file_name1 in os.listdir(dir1):
-    file_path1 = os.path.join(dir1,file_name1)
+for file_name1 in os.listdir(dir1): #ファイルディレクトリ「dir1」の中身のリストをファイル名で取り出す→file_name1に格納？
+    file_path1 = os.path.join(dir1,file_name1) #dir1/file_name1というパスを作る
     #print(file_path1)
 
     duration_list1 = []
     distance_list1 = []
-    infile1 = open(file_path1,"r",encoding="utf-8")
+    infile1 = open(file_path1,"r",encoding="utf-8")　#上で作ったパスのファイルをutf-8でエンコードして開く
     line_counter = 0
     for line in infile1:
-        data_list = line.replace("¥n","").split(",")
-        duration_list1.append(int(data_list[0]))
-        distance_list1.append(float(data_list[1]))
+        data_list = line.replace("¥n","").split(",") #改行を削除、「,」で区切る
+        duration_list1.append(int(data_list[0])) #duration_list1の末尾にint配列のデータを追加？
+        distance_list1.append(float(data_list[1])) #上と同じ書式
         line_counter += 1
     infile1.close()
 

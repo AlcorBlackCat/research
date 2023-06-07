@@ -87,25 +87,25 @@ def create_road_network(root):   #65行目で返したrootを引数に指定し�
         node_id_list = []
         node_x_list = []; node_y_list = []
         distance_list = []
-        data_counter = 0
+        data_counter = 0    #データの数の初期値
 
-        for data in data_list:
-          node_x_list.append( float(data.split(",")[0]) )
-          node_y_list.append( float(data.split(",")[1]) )
-          if (float(data.split(",")[0]), float(data.split(",")[1])) not in x_y_dic.keys():
-            node_id_list.append(node_id)
-            DG.add_node(node_id, pos=(float(data.split(",")[0]), float(data.split(",")[1])))
-            x_y_dic[ (float(data.split(",")[0]), float(data.split(",")[1])) ] = node_id
-            node_id += 1
+        for data in data_list:   #dataにdata_listの要素を順に代入
+          node_x_list.append( float(data.split(",")[0]) )    #node_x_listにfloat型の数を追加　追加するのはdataの中から,で区切ってリストの中に追加した（.split）要素の０番目
+          node_y_list.append( float(data.split(",")[1]) )    #node_y_listにfloat型の数を追加　追加するのはdataの中から,で区切ってリストの中に追加した（.split）要素の１番目
+          if (float(data.split(",")[0]), float(data.split(",")[1])) not in x_y_dic.keys():   #もし、94,95行目のlistの中に x_y_dicの要素がなかった場合     辞書.keys()の形→キーのみが格納されたdict_keys型のイテラブル（要素を一つずつ取り出すことができるオブジェクト）を作る
+            node_id_list.append(node_id)    #node_id_listにnode_idを追加
+            DG.add_node(node_id, pos=(float(data.split(",")[0]), float(data.split(",")[1])))     #DG(グラフ？)のnodeに属性を付与 →　重み付きグラフを作成することができる
+            x_y_dic[ (float(data.split(",")[0]), float(data.split(",")[1])) ] = node_id   #x_y_dicをnode_idに更新
+            node_id += 1   #node_idを更新　カウントをする
 
-          else:
-            node_id_list.append( x_y_dic[ (float(data.split(",")[0]), float(data.split(",")[1])) ] )
+          else:   #もし、94,95行目のlistの中に x_y_dicの要素があるなら
+            node_id_list.append( x_y_dic[ (float(data.split(",")[0]), float(data.split(",")[1])) ] )   #node_id_listにx_y_dicを追加
 
-          if data_counter >= 1:
-            distance_list.append( np.sqrt( (float(data.split(",")[0]) - old_node_x)**2 + (float(data.split(",")[1]) - old_node_y)**2) )
-          old_node_x = float(data.split(",")[0])
-          old_node_y = float(data.split(",")[1])
-          data_counter += 1
+          if data_counter >= 1:   #もし、data_counterが１以上なら
+            distance_list.append( np.sqrt( (float(data.split(",")[0]) - old_node_x)**2 + (float(data.split(",")[1]) - old_node_y)**2) )   #指定された配列内の各要素の平方根を計算し、それをdistance_listに追加
+          old_node_x = float(data.split(",")[0])    #old_node_xをfloat型で、dataの要素を,で区切ったときの０番目の要素にする
+          old_node_y = float(data.split(",")[1])   #old_node_yをfloat型で、dataの要素を,で区切ったときの1番目の要素にする
+          data_counter += 1   #data_counterを更新
         for i in range(len(node_id_list)-1):
           DG.add_edge(node_id_list[i], node_id_list[i+1], weight=distance_list[i], color="black", speed=float(child2.attrib["speed"])) # calculate weight here
         if "from" in child.attrib and "to" in child.attrib:

@@ -106,29 +106,29 @@ def create_road_network(root):   #65行目で返したrootを引数に指定し�
           old_node_x = float(data.split(",")[0])    #old_node_xをfloat型で、dataの要素を,で区切ったときの０番目の要素にする
           old_node_y = float(data.split(",")[1])   #old_node_yをfloat型で、dataの要素を,で区切ったときの1番目の要素にする
           data_counter += 1   #data_counterを更新
-        for i in range(len(node_id_list)-1):
-          DG.add_edge(node_id_list[i], node_id_list[i+1], weight=distance_list[i], color="black", speed=float(child2.attrib["speed"])) # calculate weight here
-        if "from" in child.attrib and "to" in child.attrib:
+        for i in range(len(node_id_list)-1):   #iにnode_id_listの長さ-1の範囲を順に代入
+          DG.add_edge(node_id_list[i], node_id_list[i+1], weight=distance_list[i], color="black", speed=float(child2.attrib["speed"])) # calculate weight here  DGに辺を追加
+        if "from" in child.attrib and "to" in child.attrib:  #もし、"from"がchild.attribの要素、"to"がchild.attribの要素なら
           #print("エッジ長とレーン番号の組",float(child2.attrib["length"]), lane_id)
-          edge_length_dic[lane_id] = float(child2.attrib["length"])
-          for i in range(len(node_x_list)):
-            lane_dic[(x_y_dic[node_x_list[i],node_y_list[i]])] = lane_id
-          lane_id += 1
-          lane.set_others(float(child2.attrib["speed"]), node_id_list, node_x_list, node_y_list)
-          edge_lanes_list.append(lane)  # to modify here
+          edge_length_dic[lane_id] = float(child2.attrib["length"])   #辺の長さの辞書？のlane_idを右辺のものとする
+          for i in range(len(node_x_list)):   #iにnode_x_listの長さの範囲を順に代入
+            lane_dic[(x_y_dic[node_x_list[i],node_y_list[i]])] = lane_id   #laneの辞書の[]内のものを右辺のものとする
+          lane_id += 1   #lane_idを更新
+          lane.set_others(float(child2.attrib["speed"]), node_id_list, node_x_list, node_y_list)   #計算や結果のために集合を作っている？  
+          edge_lanes_list.append(lane)  # to modify here  edge_laneのリストにlaneを追加する
 
-  return x_y_dic, lane_dic, edge_length_dic, DG, edge_lanes_list
+  return x_y_dic, lane_dic, edge_length_dic, DG, edge_lanes_list    #この処理で得られた値をそれぞれ戻り値として返す
 
 # generate a list of road segments for U-turn
 #道路区分の作成
-def create_road_segments(edge_lanes_list):
-  road_segments_list = []
-  for i in range(len(edge_lanes_list)-1):
-    for j in range(i+1, len(edge_lanes_list)):
-      if edge_lanes_list[i].from_id == edge_lanes_list[j].to_id and edge_lanes_list[i].to_id == edge_lanes_list[j].from_id:
-        road_segments_list.append(RoadSegment(edge_lanes_list[i], edge_lanes_list[j]))
-        break
-  return road_segments_list
+def create_road_segments(edge_lanes_list):   #関数定義
+  road_segments_list = []   #空のリスト作成
+  for i in range(len(edge_lanes_list)-1):   #iがeedge_lanes_list-1の長さ分だけ繰り返す
+    for j in range(i+1, len(edge_lanes_list)):   #jがi+1～edge_lanes_listの長さの間の数だけ繰り返す
+      if edge_lanes_list[i].from_id == edge_lanes_list[j].to_id and edge_lanes_list[i].to_id == edge_lanes_list[j].from_id:  #もし、この３つが等しいなら
+        road_segments_list.append(RoadSegment(edge_lanes_list[i], edge_lanes_list[j]))   #road_segments_listに()内の要素を追加  RoadSegmentはclass
+        break  #終了
+  return road_segments_list  #返り値としてroad_segments_listを返す
 
 # randomly select Orign and Destination lanes (O&D are different)
 #出発地点と目的地をランダムに選ぶ

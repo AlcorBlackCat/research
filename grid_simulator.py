@@ -34,7 +34,7 @@ print("seed値 : " + str(a))
 np.random.seed(a)
 
 #input parameters
-number_of_cars = 300 #一般車両
+number_of_cars = 300 #一般車両、奇数にしない方が良さそう？
 number_of_obstacles = 10 #通行不能箇所数
 number_of_fake_cars = 1 #悪意のある車両数
 number_of_fake_obstacles = 1 #偽の通行不能箇所数

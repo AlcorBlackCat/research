@@ -35,11 +35,11 @@ for file_name1 in os.listdir(dir1): #ファイルディレクトリ「dir1」の
         line_counter += 1
     infile1.close() #開いたinfile1を閉じる
 
-    duration_list1_sorted = sorted(duration_list1)[int(len(duration_list1)/2):] #
+    duration_list1_sorted = sorted(duration_list1)[int(len(duration_list1)/2):] #duration_list1をソートした後半をduration_list1_sortedとする
     distance_list1_sorted = sorted(distance_list1)[int(len(duration_list1)/2):]
-    duration_list_sorted1 = []
+    duration_list_sorted1 = [] #初期化
     distance_list_sorted1 = []
-    for i in range(half_number_of_cars):
+    for i in range(half_number_of_cars): #half_number_of_carsの数値分の回数以下の処理を繰り返す
         duration_list_sorted1.append((np.random.choice(duration_list1_sorted)))
         distance_list_sorted1.append((np.random.choice(distance_list1_sorted)))
 

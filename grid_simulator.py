@@ -158,7 +158,7 @@ def find_obstacle_lane_and_node():   #関数の定義
     obstacle_lane_id = np.random.randint(len(edge_lanes_list))  #edge_lanes_listの長さの範囲の整数の乱数を返す
     obstacle_node_id = x_y_dic[(edge_lanes_list[obstacle_lane_id].node_x_list[-1], edge_lanes_list[obstacle_lane_id].node_y_list[-1])]  #通行不能個所の辞書作成？
     oncoming_lane = None   #Noneは空っぽの状態を表すオブジェクト
-    for i in range(len(edge_lanes_list) - 1):
+    for i in range(len(edge_lanes_list) - 1):  #iがedge_lanes_listの長さの範囲-1だけ繰り返す
       for j in range(i + 1, len(edge_lanes_list)):
         if edge_lanes_list[i].from_id == edge_lanes_list[j].to_id and edge_lanes_list[i].to_id == edge_lanes_list[j].from_id:
           if edge_lanes_list[obstacle_lane_id] == edge_lanes_list[i]:

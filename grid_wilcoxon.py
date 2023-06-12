@@ -26,16 +26,16 @@ for file_name1 in os.listdir(dir1): #ファイルディレクトリ「dir1」の
 
     duration_list1 = []
     distance_list1 = []
-    infile1 = open(file_path1,"r",encoding="utf-8")　#上で作ったパスのファイルをutf-8でエンコードして開く
+    infile1 = open(file_path1,"r",encoding="utf-8")　#上で作ったパスのファイルをinfile1としてutf-8でエンコードして開く
     line_counter = 0
     for line in infile1:
         data_list = line.replace("¥n","").split(",") #改行を削除、「,」で区切る
         duration_list1.append(int(data_list[0])) #duration_list1の末尾にint配列のデータを追加？
         distance_list1.append(float(data_list[1])) #上と同じ書式
         line_counter += 1
-    infile1.close()
+    infile1.close() #開いたinfile1を閉じる
 
-    duration_list1_sorted = sorted(duration_list1)[int(len(duration_list1)/2):]
+    duration_list1_sorted = sorted(duration_list1)[int(len(duration_list1)/2):] #
     distance_list1_sorted = sorted(distance_list1)[int(len(duration_list1)/2):]
     duration_list_sorted1 = []
     distance_list_sorted1 = []

@@ -20,8 +20,8 @@ for i in range(repetition):
 
     #ランダムサンプリング
     for j in range(n1):
-        sampleX.append(np.random.pareto(1.0))
-    sampleX_sorted=sorted(sampleX)
+        sampleX.append(np.random.pareto(1.0)) #パレート分布からランダムに取得、sampleXに追加
+    sampleX_sorted=sorted(sampleX) #sampleXをソートしたものをsampleX_sortedとする
 
     for j in range(n2):
         sampleY.append(np.random.pareto(1.0))

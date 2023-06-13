@@ -159,75 +159,75 @@ def find_obstacle_lane_and_node():   #関数の定義
     obstacle_node_id = x_y_dic[(edge_lanes_list[obstacle_lane_id].node_x_list[-1], edge_lanes_list[obstacle_lane_id].node_y_list[-1])]  #通行不能個所の辞書作成？
     oncoming_lane = None   #Noneは空っぽの状態を表すオブジェクト
     for i in range(len(edge_lanes_list) - 1):
-      for j in range(i + 1, len(edge_lanes_list)):
-        if edge_lanes_list[i].from_id == edge_lanes_list[j].to_id and edge_lanes_list[i].to_id == edge_lanes_list[j].from_id:
-          if edge_lanes_list[obstacle_lane_id] == edge_lanes_list[i]:
-            oncoming_lane = edge_lanes_list[j]
-          elif edge_lanes_list[obstacle_lane_id] == edge_lanes_list[j]:
+      for j in range(i + 1, len(edge_lanes_list)):   #i+1～edge_lanes_listの長さの範囲
+        if edge_lanes_list[i].from_id == edge_lanes_list[j].to_id and edge_lanes_list[i].to_id == edge_lanes_list[j].from_id:   #左式の等号と右式の等号がおなじなら?
+          if edge_lanes_list[obstacle_lane_id] == edge_lanes_list[i]:  #edge_lanes_listが保持している通行不能個所情報とedge_lanes_listのiの要素が等しいなら
+            oncoming_lane = edge_lanes_list[j]   #oncoming_lane（対向レーン）はedge_lanes_list[j]
+          elif edge_lanes_list[obstacle_lane_id] == edge_lanes_list[j]: 
             oncoming_lane = edge_lanes_list[i]
-    if oncoming_lane == None:
-      if obstacle_node_id not in obstacle_node_id_list:
+    if oncoming_lane == None:   #もしoncoming_laneが空なら
+      if obstacle_node_id not in obstacle_node_id_list:   #もしobstacle_node_idがobstacle_node_id_listという辞書に無かった場合
         break
-    elif oncoming_lane != None:
-      if x_y_dic[(oncoming_lane.node_x_list[-1], oncoming_lane.node_y_list[-1])] not in obstacle_node_id_list and obstacle_node_id not in obstacle_node_id_list:
+    elif oncoming_lane != None:  #oncoming_laneが空ではないとき
+      if x_y_dic[(oncoming_lane.node_x_list[-1], oncoming_lane.node_y_list[-1])] not in obstacle_node_id_list and obstacle_node_id not in obstacle_node_id_list:   #x_y_dic(道路の座標情報？)がobstacle_node_id_listに含まれなく、obstacle_node_idがobstacle_node_id_listに含まれない場合
         break
-  obstacle_node_id_list.append(obstacle_node_id)
-  pair_node_id_list.append(x_y_dic[(edge_lanes_list[obstacle_lane_id].node_x_list[0], edge_lanes_list[obstacle_lane_id].node_y_list[0])])
-  #print("障害物ノードリスト : "+str(obstacle_node_id_list))
+  obstacle_node_id_list.append(obstacle_node_id)   #obstacle_node_id_listに（）内の要素の追加
+  pair_node_id_list.append(x_y_dic[(edge_lanes_list[obstacle_lane_id].node_x_list[0], edge_lanes_list[obstacle_lane_id].node_y_list[0])])   #辞書かリストに要素追加  おそらく、対向車線も含めた道路情報
+  #print("障害物ノードリスト : "+str(obstacle_node_id_list))     obstacle_node_id_listが通行不能個所の一覧になっている
  
   return obstacle_lane_id, obstacle_node_id
 
 #ネットワークの描画
-def draw_road_network(DG):
-  pos=nx.get_node_attributes(DG,'pos')
-  edge_color = nx.get_edge_attributes(DG, "color")
-  nx.draw(DG, pos, node_size=1, arrowsize=5, with_labels=True, font_size=0.8, font_color="red", edge_color=edge_color.values())
+def draw_road_network(DG):  #raw_road_networkという関数の定義  引数はDG
+  pos=nx.get_node_attributes(DG,'pos')   #get_node_attributesはグラフからノード属性を取得する　　DGのグラフからposという属性を取り出す？
+  edge_color = nx.get_edge_attributes(DG, "color")   #get_edge_attributesはグラフからedge属性を取得する  DGのグラフからcolorという属性を取り出す
+  nx.draw(DG, pos, node_size=1, arrowsize=5, with_labels=True, font_size=0.8, font_color="red", edge_color=edge_color.values())   #ネットワークの可視化
 
-# For initializing animation settings
+#  For initializing animation settings   (アニメーション設定を初期化する場合)
 def init():
-  line1.set_data([], [])
+  line1.set_data([], [])  #空のsetの作成？
   line2.set_data([], [])
   line3.set_data([], [])
   line4.set_data([], [])
-  title.set_text("Simulation step: 0")
+  title.set_text("Simulation step: 0")   #titeに（）内の文字をセット？
   return line1, line2, line3, line4, title
 
-# main of animation update
+# main of animation update   (アニメーションアップデートのメイン)
 def animate(time):
-  global xdata,ydata,obstacle_x,obstacle_y,Fxdata,Fydata,avoid_count,math_count,passing_comunication,goal_count
+  global xdata,ydata,obstacle_x,obstacle_y,Fxdata,Fydata,avoid_count,math_count,passing_comunication,goal_count   #グローバル変数の定義 グローバル変数はモジュール(スクリプト)全体で有効な変数です
   global goal_time_list, number_of_shortest_path_changes_list, number_of_opportunistic_communication_list, moving_distance_list, time_list
   #sleep(0.1)
 
-  xdata = []; ydata = []
+  xdata = []; ydata = []  #それぞれの変数の初期化
   Fxdata = []; Fydata = []
   #all_cars_list = []
   #all_cars_list = cars_list + fakecars_list
 
-  for car in cars_list:
-    if car.__class__.__name__ == 'Car':
-      time_list.append(time)
-      x_new, y_new, goal_arrived_flag, car_forward_pt, diff_dist = car.move(edges_cars_dic, sensitivity, lane_dic, edge_length_dic)
+  for car in cars_list:  #carはcars_listの回数分繰り返す
+    if car.__class__.__name__ == 'Car':  #もしcarの_class_の_name_が'Car'に等しいなら？  ''は""と同じ　　Car→grid_car　　??
+      time_list.append(time)   #time_listに(time)を追加  時間情報を保持しておくための入れ物？
+      x_new, y_new, goal_arrived_flag, car_forward_pt, diff_dist = car.move(edges_cars_dic, sensitivity, lane_dic, edge_length_dic)   #挿し木のグローバル変数の定義？？？
 
-      # remove arrived cars from the list
-      if car.goal_arrived == True:
-          goal_count += 1
-          number_of_shortest_path_changes_list.append(car.number_of_shortest_path_changes)
-          number_of_opportunistic_communication_list.append(car.number_of_opportunistic_communication)
-          goal_time_list.append(car.elapsed_time)
-          moving_distance_list.append(round(car.moving_distance,1))
-          if car.fakecar_flag == False:
+      # remove arrived cars from the list   到着した車をリストから削除します
+      if car.goal_arrived == True:  #もしcarのgoal_arrivedが Trueなら   goal到着しているなら
+          goal_count += 1   #goal_countを更新
+          number_of_shortest_path_changes_list.append(car.number_of_shortest_path_changes)  #最短経路に変更した数のリストにcarが持っている最短経路の変更数を追加？
+          number_of_opportunistic_communication_list.append(car.number_of_opportunistic_communication)  #すれ違い通信をした数のリストにcarがもっているすれ違い通信数を追加
+          goal_time_list.append(car.elapsed_time)  #goal_time_listにcarがもっているelapsed_time(経過時間情報？)を追加
+          moving_distance_list.append(round(car.moving_distance,1))  #moving_distance_lisにcarのmoving_distanceを小数点以下１桁を表示するように四捨五入したものを追加
+          if car.fakecar_flag == False:   #もしcarのfakecar_flagがFalseのとき
             #print("車両の削除")
-            cars_list.remove( car )
-          if car.fakecar_flag == True:
-            cars_list.remove( car )
-            print("悪意のある車の削除")
+            cars_list.remove( car )  #cars_listから車両の削除
+          if car.fakecar_flag == True:  #もしcarのfakecar_flagがTrueのとき
+            cars_list.remove( car )  #cars_listから車両の削除  
+            print("悪意のある車の削除")  
             #fakecars_list.remove( car )
 
-      # TODO: if the car encounters road closure, it U-turns.
+      # TODO: if the car encounters road closure, it U-turns.    (車が通行止めに遭遇した場合、それはUターンします)     アノテーションコメント→コメントにメタデータを付加するものです。コードの欠陥がわかりやすくなります
       #障害物があればUターン
       if car_forward_pt.__class__.__name__ != "Car" and diff_dist <= 20:
-        if car_forward_pt.fake_flag == False:
-          x_new, y_new = car.U_turn(edges_cars_dic, lane_dic, edge_lanes_list, x_y_dic, obstacle_node_id_list)
+        if car_forward_pt.fake_flag == False:    #もし、car_forward_ptのfake_flagがFalseなら
+          x_new, y_new = car.U_turn(edges_cars_dic, lane_dic, edge_lanes_list, x_y_dic, obstacle_node_id_list)  #x_new とy_newを更新
         #偽の障害物ならmove
         else:
           None
@@ -235,63 +235,63 @@ def animate(time):
           #print(car)
         #print(car_forward_pt.fake_flag)
       
-      xdata.append(x_new)
-      ydata.append(y_new)
-      if car.fakecar_flag == True:
-        Fxdata.append(x_new)
-        Fydata.append(y_new)
+      xdata.append(x_new)   #グローバル変数のxdataにx_newを追加
+      ydata.append(y_new)   #グローバル変数のydataにy_newを追加
+      if car.fakecar_flag == True:   #もし、carのfake_flagがTrueなら
+        Fxdata.append(x_new)  #たぶんこのFはfakeのF　悪意を持った車両用のデータ？　　xdataにx_newを追加
+        Fydata.append(y_new)  #xdataにx_newを追加
       #対向車線を決定 oc = oncoming = 対向
       #対向車線に車両があるとき、車両の持っている障害物の情報を渡す。
 
       if car.opportunistic_communication_frag == True: #すれ違い機能のON/OFF (35行目)
           for i in range(len(edge_lanes_list) - 1):
             for j in range(i + 1, len(edge_lanes_list)):
-              if edge_lanes_list[i].from_id == edge_lanes_list[j].to_id and edge_lanes_list[i].to_id == edge_lanes_list[j].from_id:
-                if edge_lanes_list[car.current_lane_id] == edge_lanes_list[i]:
-                  oc_lane = edge_lanes_list[j]
-                elif edge_lanes_list[car.current_lane_id] == edge_lanes_list[j]:
-                  oc_lane = edge_lanes_list[i]
+              if edge_lanes_list[i].from_id == edge_lanes_list[j].to_id and edge_lanes_list[i].to_id == edge_lanes_list[j].from_id:  #edge_lane_id[i]のfrom_idとedge_lane_id[j]のto_idが同じでなおかつ、edge_lane_id[i]のto_idとedge_lane_id[j]のfrom_idが等しいとき　　おそらく、すべてのノードの組み合わせを網羅的に比べていき、行くときも来るときも同じノードである場合のみと押す
+                if edge_lanes_list[car.current_lane_id] == edge_lanes_list[i]:  #現在のlane_idとiが等しいなら
+                  oc_lane = edge_lanes_list[j]  #対向車線の更新
+                elif edge_lanes_list[car.current_lane_id] == edge_lanes_list[j]:  #
+                  oc_lane = edge_lanes_list[i]  #対向車線の更新
 
-          for oncoming_car in edges_cars_dic[(x_y_dic[(oc_lane.node_x_list[0], oc_lane.node_y_list[0])],x_y_dic[(oc_lane.node_x_list[1], oc_lane.node_y_list[1])])]:
+          for oncoming_car in edges_cars_dic[(x_y_dic[(oc_lane.node_x_list[0], oc_lane.node_y_list[0])],x_y_dic[(oc_lane.node_x_list[1], oc_lane.node_y_list[1])])]:  #oncoming_car(対向車線の車)をedges_cars_dicの数だけ繰り返す
             
-            if oncoming_car.__class__.__name__ =="Car" and len(oncoming_car.obstacles_info_list) >= 1 and oncoming_car.opportunistic_communication_frag == True:
+            if oncoming_car.__class__.__name__ =="Car" and len(oncoming_car.obstacles_info_list) >= 1 and oncoming_car.opportunistic_communication_frag == True:   # oncoming_car.__class__.__name__ =="Car"でかつ、oncoming_car.obstacles_info_list（対向車線の車が持っている通行不能個所の情報）が１以上かつ、oncoming_car.opportunistic_communication_flag ==True（すれ違い通信をする）とき
               #print("すれ違い通信の判定")
               #print(car.obstacles_info_list)
-              for i in oncoming_car.obstacles_info_list:
-                if i not in car.obstacles_info_list:
+              for i in oncoming_car.obstacles_info_list:  #対向車線の車が持つ通行不能個所の情報だけ繰り返す
+                if i not in car.obstacles_info_list:  #iがcar.obstacles_info_list（車がもつ通行不能個所情報（自分？））にない場合
                   #print("すれ違い通信開始")
                   #car.number_of_opportunistic_communication += 1
-                  car.obstacles_info_list.append(i)
-                  if oncoming_car.fakecar_flag == False:
+                  car.obstacles_info_list.append(i)   #car.obstacles_info_listにi(新しい通行不能個所の情報)を追加
+                  if oncoming_car.fakecar_flag == False:  #対向車線の車のfakecar_flagがFalse(悪意を持つ車両ではない)とき
                     passing_comunication += 1 #相手は一般車両
                   else:
                     passing_comunication += 1 #相手は攻撃車両
 
-                  if i in car.shortest_path:
-                    for j in range(len(car.shortest_path)-1):
-                      car.short_path.append((car.shortest_path[j],car.shortest_path[j+1]))
+                  if i in car.shortest_path:  #iが最短経路の数だけ繰り返す
+                    for j in range(len(car.shortest_path)-1):  
+                      car.short_path.append((car.shortest_path[j],car.shortest_path[j+1]))  #carの最短経路に追加
                     #print("経路" + str(car.short_path))
-                    for j in car.short_path:
-                      if j[1] == i:
+                    for j in car.short_path:  #jが最短経路の数だけ繰り返す
+                      if j[1] == i:  #jの１つめの要素がiと等しいなら
                         #print(j)
-                        if j[1] != car.shortest_path[car.current_sp_index + 1]:
-                          if car.DG_copied.has_edge(j[0],j[1]) == True:
-                            car.DG_copied.remove_edge(j[0],j[1])
-                          while True:
+                        if j[1] != car.shortest_path[car.current_sp_index + 1]:  #jの１つめの要素がcarの最短経路の[]内の要素と等しくないなら
+                          if car.DG_copied.has_edge(j[0],j[1]) == True:   #もしDDグラフのコピー？のedge[]がTrueなら？？？
+                            car.DG_copied.remove_edge(j[0],j[1])  #edgeの削除
+                          while True:  #Trueである間繰り返す
                             try:
                               #print("-------------------")
                               #print(car)
                               #print("障害物" + str(i))
                               #print("旧最短経路" + str(car.shortest_path))
-                              car.current_sp_index += 1
-                              current_start_node_id = car.shortest_path[car.current_sp_index - 1]
+                              car.current_sp_index += 1  #カウント？値？の更新
+                              current_start_node_id = car.shortest_path[car.current_sp_index - 1]  #現在の開始地点を最短経路に更新？？？     shortest_path()はそれで一つの関数
                               #print("現在地:" + str(current_start_node_id) + " 目的地:" + str(car.dest_node_id))
-                              car.shortest_path = nx.dijkstra_path(car.DG_copied, current_start_node_id, car.dest_node_id)
-                              math_count += 1
+                              car.shortest_path = nx.dijkstra_path(car.DG_copied, current_start_node_id, car.dest_node_id)  #ダイクストラ法（Dijkstra's algorithm）は辺の重みが非負数のグラフの単一始点最短経路問題を解くアルゴリズム。
+                              math_count += 1  #カウントの更新
                               #print("再計算" + str(math_count))
                               #print("新最短経路" + str(car.shortest_path))
 
-                              car.current_sp_index = 0
+                              car.current_sp_index = 0  #初期値更新？
                               current_start_node_id = car.shortest_path[car.current_sp_index]
                               car.current_start_node = car.DG_copied.nodes[current_start_node_id]["pos"]
                               car.current_position = car.DG_copied.nodes[current_start_node_id]["pos"]

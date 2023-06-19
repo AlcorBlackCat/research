@@ -189,7 +189,7 @@ def init():
   line2.set_data([], [])
   line3.set_data([], [])
   line4.set_data([], [])
-  title.set_text("Simulation step: 0")   #titeに（）内の文字をセット？
+  title.set_text("Simulation step: 0")   #titeleに（）内の文字をセット？
   return line1, line2, line3, line4, title
 
 # main of animation update   (アニメーションアップデートのメイン)
@@ -292,8 +292,8 @@ def animate(time):
                               #print("新最短経路" + str(car.shortest_path))
 
                               car.current_sp_index = 0  #初期値更新？
-                              current_start_node_id = car.shortest_path[car.current_sp_index]
-                              car.current_start_node = car.DG_copied.nodes[current_start_node_id]["pos"]
+                              current_start_node_id = car.shortest_path[car.current_sp_index]    #shortest_pathは全点対最短経路問題に対する解が返される。各要素の値が最短経路のコストの総和（最短距離）
+                              car.current_start_node = car.DG_copied.nodes[current_start_node_id]["pos"]   #開始地点のnodeをcarのDGのcurrent_start_node_idから"pos"という属性でコピーする？
                               car.current_position = car.DG_copied.nodes[current_start_node_id]["pos"]
                               current_end_node_id = car.shortest_path[car.current_sp_index + 1]
                               #print(current_start_node_id, current_end_node_id)

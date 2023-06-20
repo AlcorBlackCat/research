@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # coding: utf-8
 
+#ウィルコクソンでデータサンプルを作るプログラム。多分それ以上でも以下でもないです。もし動かなかったらこのコメントを消して動かして下さい。
+
 import numpy as np
 import matplotlib.pyplot as plt
 import datetime

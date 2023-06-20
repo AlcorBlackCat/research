@@ -294,80 +294,80 @@ def animate(time):
                               car.current_sp_index = 0  #初期値更新？
                               current_start_node_id = car.shortest_path[car.current_sp_index]    #shortest_pathは全点対最短経路問題に対する解が返される。各要素の値が最短経路のコストの総和（最短距離）
                               car.current_start_node = car.DG_copied.nodes[current_start_node_id]["pos"]   #開始地点のnodeをcarのDGのcurrent_start_node_idから"pos"という属性でコピーする？
-                              car.current_position = car.DG_copied.nodes[current_start_node_id]["pos"]
-                              current_end_node_id = car.shortest_path[car.current_sp_index + 1]
-                              #print(current_start_node_id, current_end_node_id)
-                              car.current_end_node = car.DG_copied.nodes[current_end_node_id]["pos"]
-                              current_edge_attributes = car.DG_copied.get_edge_data(current_start_node_id, current_end_node_id)
-                              car.current_max_speed = current_edge_attributes["speed"]
-                              car.current_distance = current_edge_attributes["weight"]
-                              edges_cars_dic[(current_start_node_id, current_end_node_id)].append(car)
+                              car.current_position = car.DG_copied.nodes[current_start_node_id]["pos"]  #nodeのコピー　ポジション
+                              current_end_node_id = car.shortest_path[car.current_sp_index + 1]  #終了地点？ゴール地点を  保存されていた？最短経路から更新する
+                              #print(current_start_node_id, current_end_node_id)  #ちゃんとできているか確認用
+                              car.current_end_node = car.DG_copied.nodes[current_end_node_id]["pos"]  #車が保持している？終了地点をDGのnodeのcurrent_end_node_idという要素からコピー？
+                              current_edge_attributes = car.DG_copied.get_edge_data(current_start_node_id, current_end_node_id)  #現在の終了地点　　get_edge_data(u, v, デフォルト = なし)[ソース]     エッジ (u, v) に関連付けられた属性ディクショナリを返します  
+                              car.current_max_speed = current_edge_attributes["speed"]  #carの現在の最大速度？ = edgeの"speed"という属性に更新
+                              car.current_distance = current_edge_attributes["weight"]  #carの現在の距離 = edgeの"weight"という属性に更新  辺の重み
+                              edges_cars_dic[(current_start_node_id, current_end_node_id)].append(car)  #edges_cars_dicの[]ないのリストにcarを追加？
                               
                               #print("-------------------")
                               break
-                            except Exception:
+                            except Exception:  #例外処理　　Exceptionという例外
                               #print(car)
-                              car.dest_lane_id = np.random.randint(len(edge_lanes_list))
-                              car.dest_node_id = x_y_dic[(edge_lanes_list[car.dest_lane_id].node_x_list[-1], edge_lanes_list[car.dest_lane_id].node_y_list[-1])]
-                              while car.dest_node_id in obstacle_node_id_list or car.current_lane_id == car.dest_lane_id:
-                                car.dest_lane_id = np.random.randint(len(edge_lanes_list))
-                                car.dest_node_id = x_y_dic[(edge_lanes_list[car.dest_lane_id].node_x_list[-1], edge_lanes_list[car.dest_lane_id].node_y_list[-1])]
+                              car.dest_lane_id = np.random.randint(len(edge_lanes_list))  #()内の範囲の整数の乱数を返す
+                              car.dest_node_id = x_y_dic[(edge_lanes_list[car.dest_lane_id].node_x_list[-1], edge_lanes_list[car.dest_lane_id].node_y_list[-1])]  #x_y_dicのそれぞれnodeのx軸y軸情報に更新  -1はなに？
+                              while car.dest_node_id in obstacle_node_id_list or car.current_lane_id == car.dest_lane_id:  #obstacle_node_id_listにcar.dest_node_idが含まれる、またはcar.current_lane_idがcar.dest_lane_idである間繰り返す
+                                car.dest_lane_id = np.random.randint(len(edge_lanes_list))  #()内の範囲の整数の乱数を返し更新する
+                                car.dest_node_id = x_y_dic[(edge_lanes_list[car.dest_lane_id].node_x_list[-1], edge_lanes_list[car.dest_lane_id].node_y_list[-1])]  #x_y_dicのそれぞれnodeのx軸y軸情報に更新　　-1はおそらくdestの時に返した値が１～で本来のものより1つずれている？から-1をする？
                               
-                              avoid_count += 1
+                              avoid_count += 1  #カウントの更新
 
-                        else:
-                          x_new, y_new = car.U_turn(edges_cars_dic, lane_dic, edge_lanes_list, x_y_dic, obstacle_node_id_list)
-                          avoid_count += 1
+                        else:  #ifにたいしての例外処理
+                          x_new, y_new = car.U_turn(edges_cars_dic, lane_dic, edge_lanes_list, x_y_dic, obstacle_node_id_list)  #あらたなx軸y軸情報に更新？更新するものはUターン情報から？
+                          avoid_count += 1  #カウントの更新  グローバル変数
                   
     #elif car.__class__.__name__ == 'Obstacle':
      # print("Obstacle #%d instance is called, skip!!!" % (car.obstacle_node_id))
     #elif car.__class__.__name__ == "Fire":
 
 
-  obstacle_x = []; obstacle_y = []
-  for obstacle in obstacles_list:
-    x_new,y_new = obstacle.move()
-    obstacle_x.append(x_new)
-    obstacle_y.append(y_new)
+  obstacle_x = []; obstacle_y = []  #通行不能のx軸のリスト,y軸のリストの初期化
+  for obstacle in obstacles_list:  #obstacles_listから順に取り出し処理したものをobstacleとする
+    x_new,y_new = obstacle.move()  #moveは、図形を指定したピクセル分の距離の場所に移動？？
+    obstacle_x.append(x_new)  #obstacle_xにx_newを追加
+    obstacle_y.append(y_new)  #obstacle_yにy_newを追加  y軸情報のリストにｙの位置情報を更新？
 
-  fakeobs_x = []; fakeobs_y = []
-  for obstacle in fakeobs_list:
-    x_new,y_new = obstacle.move()
-    fakeobs_x.append(x_new)
-    fakeobs_y.append(y_new)
+  fakeobs_x = []; fakeobs_y = []  #偽の通行不能個所のx軸のリスト,y軸のリストを初期化
+  for obstacle in fakeobs_list:  #fakeobs_listから順に取り出し処理したものをobstacleとする
+    x_new,y_new = obstacle.move()  #moveは、図形を指定したピクセル分の距離の場所に移動？？
+    fakeobs_x.append(x_new)  #fakeobs_xにx_newを追加
+    fakeobs_y.append(y_new)  #fakeobs_ｙにy_newの追加
   
-  if time == 600:
+  if time == 600:  #もし、timeが600なら　何かしらの不具合でシミュレーションが終わらなかった場合の処理？
     #print("残っている車両の確認")
-    x = number_of_obstacles + number_of_fake_obstacles
+    x = number_of_obstacles + number_of_fake_obstacles  #x = 通行不能個所数 + 偽の通行不能個所数
     #print(cars_list)
-    print(cars_list[x])
-    print(cars_list[x].shortest_path)
-    print("現在地" + str(cars_list[x].shortest_path[cars_list[x].current_sp_index]))
+    print(cars_list[x])  #cars_listの合計通行不能個所数？を表示
+    print(cars_list[x].shortest_path)  #cars_listの最短経路の合計通行不能個所数？の表示
+    print("現在地" + str(cars_list[x].shortest_path[cars_list[x].current_sp_index]))  #現在地の座標を表示する  sp=shortest_path？？
     print("強制終了")
-    sys.exit(0)
+    sys.exit(0)  #実行しているプログラムの中でメインプロセスを終了させるための関数
   # check if all the cars arrive at their destinations
-  if len(cars_list) - number_of_obstacles - number_of_fake_obstacles == 0:
+  if len(cars_list) - number_of_obstacles - number_of_fake_obstacles == 0:  #もしcars_listの長さ - 通行不能個所数 - 偽の通行不能個所数 =0ならば
     #print("経路変更回数"+str(number_of_shortest_path_changes_list))
     #print("すれ違い通信回数"+str(number_of_opportunistic_communication_list))
     #print("ゴールタイム"+str(goal_time_list))
     #print("総移動距離"+str(moving_distance_list))
 
-    print("Total simulation step: " + str(time - 1))
-    print("### End of simulation ###")
-    print("remath:" + str(math_count) + " through:" + str(avoid_count) + " pass:" + str(passing_comunication))
-    plt.clf()
+    print("Total simulation step: " + str(time - 1))  #シミュレーションのかかった合計step数を表示
+    print("### End of simulation ###")  
+    print("remath:" + str(math_count) + " through:" + str(avoid_count) + " pass:" + str(passing_comunication))  #再計算？カウント + 通行カウント？？ + 通信で渡したカウント？ を表示
+    plt.clf()  #Clear figure    現在のFigure全体とそのすべての軸をクリアしますが、ウィンドウを開いたままにして、他のプロットで再利用できるようにします。
 
-    plt.hist(moving_distance_list, bins=50, rwidth=0.9, color='b')
-    plt.xlabel("moving distance")
+    plt.hist(moving_distance_list, bins=50, rwidth=0.9, color='b')  #移動距離のヒストグラム（正規化はされていない）を描く
+    plt.xlabel("moving distance")  #軸にラベルを付ける
     plt.ylabel("number of cars")
-    plt.savefig(folder_name2 + '/' + "総移動距離(" + str(a) + ") " + infilename + " " + str(number_of_cars) + " " + str(number_of_obstacles) + " " + str(number_of_fake_cars) + " " + str(number_of_fake_obstacles) + ".png")
-    plt.clf()
+    plt.savefig(folder_name2 + '/' + "総移動距離(" + str(a) + ") " + infilename + " " + str(number_of_cars) + " " + str(number_of_obstacles) + " " + str(number_of_fake_cars) + " " + str(number_of_fake_obstacles) + ".png")  #場所と名前を指定して図を保存
+    plt.clf()  #図のクリア
 
-    plt.hist(goal_time_list, bins=50, rwidth=0.9, color='b')
-    plt.xlabel("goal time")
+    plt.hist(goal_time_list, bins=50, rwidth=0.9, color='b')  #移動時間のヒストグラムをかく
+    plt.xlabel("goal time")  #ラベルの指定  
     plt.ylabel("number of cars")
-    plt.savefig(folder_name3 + '/' +"ゴールタイム(" + str(a) + ") " + infilename + " " + str(oppcomm_rate) + " " + str(number_of_cars) + " " + str(number_of_obstacles) + " " + str(number_of_fake_cars) + " " + str(number_of_fake_obstacles) + ".png")
-    plt.clf()
+    plt.savefig(folder_name3 + '/' +"ゴールタイム(" + str(a) + ") " + infilename + " " + str(oppcomm_rate) + " " + str(number_of_cars) + " " + str(number_of_obstacles) + " " + str(number_of_fake_cars) + " " + str(number_of_fake_obstacles) + ".png")  #図の保存
+    plt.clf()  #図のクリア
 
     """plt.hist(number_of_opportunistic_communication_list, bins=50,rwidth=0.9, color='b')
     # plt.show()
@@ -379,11 +379,11 @@ def animate(time):
     plt.savefig("経路変更数.png")
     plt.clf()"""
 
-    with open(folder_name + '/' + file_name, 'w', newline='') as f:
-      writer = csv.writer(f)
-      for i in range(number_of_cars):
-        writer.writerow([goal_time_list[i], moving_distance_list[i]])
-    sys.exit(0) # end of simulation, exit.
+    with open(folder_name + '/' + file_name, 'w', newline='') as f:  #読み込み・書き込みいずれの場合も組み込み関数open()でファイルを開く。  'w'で書き込み用でファイルオープン　　newline='' が指定されない場合、クォートされたフィールド内の改行は適切に解釈されず、書き込み時に \r\n を行末に用いる処理系では余分な \r が追加されてしまいます。csv モジュールは独自 (universal) の改行処理を行うため、newline='' を指定することは常に安全です。
+      writer = csv.writer(f)   #ユーザが与えたデータをデリミタで区切られた文字列に変換し、与えられたファイルオブジェクトに書き込むための writer オブジェクトを返します　(f)は前行で指定している  前の行で指定したものにcsvファイルの書き込み
+      for i in range(number_of_cars):  #車両数の範囲だけiを繰り返す
+        writer.writerow([goal_time_list[i], moving_distance_list[i]])  #writerowメソッドの引数はリストです。リストの内容をカンマ区切りでcsvファイルに書き込みます。  ()内のリストの指定したものを,で区切って順に書き込む
+    sys.exit(0) # end of simulation, exit.  実行しているプログラムの中でメインプロセスを終了させるための関数
 
 
   line1.set_data(xdata, ydata)

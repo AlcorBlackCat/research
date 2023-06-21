@@ -185,7 +185,7 @@ def draw_road_network(DG):  #raw_road_networkという関数の定義  引数は
 
 #  For initializing animation settings   (アニメーション設定を初期化する場合)
 def init():
-  line1.set_data([], [])  #空のsetの作成？
+  line1.set_data([], [])  #空line1にデータをセット作成？
   line2.set_data([], [])
   line3.set_data([], [])
   line4.set_data([], [])
@@ -386,39 +386,39 @@ def animate(time):
     sys.exit(0) # end of simulation, exit.  実行しているプログラムの中でメインプロセスを終了させるための関数
 
 
-  line1.set_data(xdata, ydata)
+  line1.set_data(xdata, ydata)   #188行目に作った空のline1にデータをセット
   line2.set_data(obstacle_x, obstacle_y)
   line3.set_data(Fxdata, Fydata)
   line4.set_data(fakeobs_x, fakeobs_y)
-  title.set_text("Simulation step: " + str(time) + ";  # of cars: " + str(len(cars_list) - number_of_obstacles - number_of_fake_obstacles) + "; goal; " + str(goal_count))
+  title.set_text("Simulation step: " + str(time) + ";  # of cars: " + str(len(cars_list) - number_of_obstacles - number_of_fake_obstacles) + "; goal; " + str(goal_count))   #()ないで指定した文字列でテキストをセット
 
-  return line1, line2, line3, line4, title
+  return line1, line2, line3, line4, title   #ここまでがanimate(time)の定義
 
 ##### main #####
-if __name__ == "__main__":
+if __name__ == "__main__":   #もし__name__ == "__main__"ならば
   #print(opportunistic_communication_frag)
   # root: xml tree of input file
-  root = read_parse_netxml(infilename)
+  root = read_parse_netxml(infilename) #58行目よりxmlファイルの読み込み？
   # x_y_dic: node's x,y pos --> node id
   # DG: Directed graph of road network
   # edge_lanes_list: list of lane instances
-  x_y_dic, lane_dic, edge_length_dic, DG, edge_lanes_list = create_road_network(root)
+  x_y_dic, lane_dic, edge_length_dic, DG, edge_lanes_list = create_road_network(root)  #68行目より道路ネットワークの作成？
   #print(lane_dic)
   # road_segments_list: list of road segment instances
-  road_segments_list = create_road_segments(edge_lanes_list)
+  road_segments_list = create_road_segments(edge_lanes_list)  #120行目より交差点の作成？？  辺のlistを用いて何かを作ってる
 
   # create cars
-  edges_all_list = DG.edges()
-  edges_cars_dic = {}
-  edges_obstacles_dic = {}
+  edges_all_list = DG.edges()   #グラフのすべての辺（道路）のリスト   ()は関数を実行で使う括弧です。
+  edges_cars_dic = {}    #車が持っている道路の辞書？
+  edges_obstacles_dic = {}  #道路の通行不能個所辞書
 
-  for item in edges_all_list:
-    edges_obstacles_dic[ item ] = []
-    edges_cars_dic[ item ] = []
+  for item in edges_all_list:  #edge_all_listを順に取り出しitemとして１つずつ実行
+    edges_obstacles_dic[ item ] = []  #変数名[ ]はリストやタプルの要素を取得するときに使います。   edges_obstacles_dicのitemという要素を初期化 or []内に順に格納   おそらく初期化
+    edges_cars_dic[ item ] = []   
   #print(edges_cars_dic)
 
 
-  obstacles_list = []
+  obstacles_list = []    #各リストや辞書の初期化
   fakeobs_list = []
   obstacle_node_id_list = []
   fakeobs_node_id_list = []

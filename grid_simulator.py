@@ -418,7 +418,7 @@ if __name__ == "__main__":   #もし__name__ == "__main__"ならば
   #print(edges_cars_dic)
 
 
-  obstacles_list = []    #各リストや辞書の初期化
+  obstacles_list = []    #各リストや辞書の初期化   []リスト,{}辞書
   fakeobs_list = []
   obstacle_node_id_list = []
   fakeobs_node_id_list = []
@@ -433,66 +433,66 @@ if __name__ == "__main__":   #もし__name__ == "__main__"ならば
   moving_distance_list = []#総移動距離リスト
   time_list = []
 
-  avoid_count = 0
-  math_count = 0
-  passing_comunication = 0
-  goal_count = 0
+  avoid_count = 0  #回避カウント　　通行不能個所を回避した回数
+  math_count = 0  #演算回数
+  passing_comunication = 0  #通信の受け渡し回数
+  goal_count = 0   #ゴールカウント
 
   #edges_all_list = DG.edges()
   #create obstacles
-  while True:
-    for i in range(number_of_obstacles):
-      obstacle_lane_id, obstacle_node_id = find_obstacle_lane_and_node()
-      obstacle = Obstacle(obstacle_node_id, obstacle_lane_id, False)
-      obstacle.init(DG)
-      obstacles_list.append(obstacle)
-      cars_list.append(obstacle)
-      edges_obstacles_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])].append(obstacle)
-      edges_cars_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])].append(obstacle)
-      obstacle_dic[edge_lanes_list[obstacle_lane_id].node_id_list[1]] = False
+  while True:   #Trueである間繰り返す
+    for i in range(number_of_obstacles):  #number_of_obstaclesの長さだけ繰り返す
+      obstacle_lane_id, obstacle_node_id = find_obstacle_lane_and_node()  #find_obstacle_lane_and_nodeは障害物を見つける関数として定義している
+      obstacle = Obstacle(obstacle_node_id, obstacle_lane_id, False)  #別のソースファイルのObstacleから引っ張ってきている？
+      obstacle.init(DG)  #obstacleでinit(要素？)を実行   https://atmarkit.itmedia.co.jp/ait/articles/2306/20/news022.htmlより
+      obstacles_list.append(obstacle)  #リストに要素の追加
+      cars_list.append(obstacle)  #cars_listに要素の追加
+      edges_obstacles_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])].append(obstacle)  #辞書の[]内で指定した要素にobstacleから追加？？
+      edges_cars_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])].append(obstacle)   #辞書の[]内で指定した要素にobstacleから追加？？
+      obstacle_dic[edge_lanes_list[obstacle_lane_id].node_id_list[1]] = False  #辞書の指定した要素を書き換える？
       #print(obstacle_dic)
-    if nx.is_weakly_connected(DG) == True:
+    if nx.is_weakly_connected(DG) == True:  #nx.is_weakly_connectedは弱い接続の有向グラフをテストします。有向グラフは、グラフが、節点間のエッジの方向が無視される場合に接続されます。グラフが強く接続されている場合(つまり、グラフが接続されている場合) 方向性を考慮しても)、それは定義上弱いです 接続もされています。
       break
 
   #偽の通行不能箇所(仮)
   while True:
     for i in range(number_of_fake_obstacles):
-      obstacle_lane_id, obstacle_node_id = find_obstacle_lane_and_node()
-      obstacle = Obstacle(obstacle_node_id, obstacle_lane_id, True)
-      obstacle.init(DG)
-      fakeobs_list.append(obstacle)
-      cars_list.append(obstacle)
-      edges_obstacles_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])].append(obstacle)
+      obstacle_lane_id, obstacle_node_id = find_obstacle_lane_and_node()  #右辺はユーザー定義関数の実行？？
+      obstacle = Obstacle(obstacle_node_id, obstacle_lane_id, True)  #別のソースフォルダからインポートしたものを実行？
+      obstacle.init(DG)  #ユーザーが定義した関数initの実行
+      fakeobs_list.append(obstacle)  #偽の通行不能個所のリストに要素を追加
+      cars_list.append(obstacle)  #車一覧に要素の追加？　　　　　　　　　　　　　ここ？？？
+      edges_obstacles_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])].append(obstacle)  #辞書の[]内で指定した要素にobstacleから追加？？
       edges_cars_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])].append(obstacle)
-      obstacle_dic[edge_lanes_list[obstacle_lane_id].node_id_list[1]] = True
-      fakeobs_node_id_list.append(obstacle_node_id_list[number_of_obstacles + i])
+      obstacle_dic[edge_lanes_list[obstacle_lane_id].node_id_list[1]] = True  #指定した辞書の要素をTrueに　　452行目とは逆の処理　　なぜ？
+      fakeobs_node_id_list.append(obstacle_node_id_list[number_of_obstacles + i])  #偽の通行不能個所のノードidリストに（）内のものを追加
     #print(obstacle_dic)
     #print(fakeobs_node_id_list)
-    if nx.is_weakly_connected(DG) == True:
+    if nx.is_weakly_connected(DG) == True:   #nx.is_weakly_connectedは弱い接続の有向グラフをテストします
       break
 
   #車両作成
-  DG_copied2 = copy.deepcopy(DG)
+  DG_copied2 = copy.deepcopy(DG)  #DG_copied2にコピーする　　深いコピーでは、一方のいかなる変更も他方には全く影響を与えない完全に別物のオブジェクトを作ることができます。　　　https://www.headboost.jp/python-copy-deepcopy/#index_id3
   for i in range(len(obstacle_node_id_list)):
-    DG_copied2.remove_edge(pair_node_id_list[i],obstacle_node_id_list[i])
+    DG_copied2.remove_edge(pair_node_id_list[i],obstacle_node_id_list[i])  #remove_edge(u, v)  Uとvの間のエッジを削除します  経路の計算に含まれないように
     #DG_copied2.remove_node(obstacle_node_id_list[i])
   for i in range(number_of_cars):
     # Reference: https://networkx.github.io/documentation/latest/reference/algorithms/generated/networkx.algorithms.shortest_paths.weighted.dijkstra_path.html
-    origin_lane_id, destination_lane_id, origin_node_id, destination_node_id = find_OD_node_and_lane()
+    origin_lane_id, destination_lane_id, origin_node_id, destination_node_id = find_OD_node_and_lane()  #find_OD_node_and_laneは出発地点と目的地をランダムに選ぶ　　135行目より
     while True:
       try:
-        shortest_path = nx.dijkstra_path(DG_copied2, origin_node_id, destination_node_id)
+        shortest_path = nx.dijkstra_path(DG_copied2, origin_node_id, destination_node_id)  #dijkstra_path(G, ソース, ターゲット, 重み='重み')  [ソース]   ソースからターゲットまでの最短加重パスを G 単位で返します。ダイクストラの方法を使用して最短加重経路を計算する グラフ内の 2 つのノード間。
         break
-      except Exception:
-        origin_lane_id, destination_lane_id, origin_node_id, destination_node_id = find_OD_node_and_lane()
+      except Exception:  #例外処理
+        origin_lane_id, destination_lane_id, origin_node_id, destination_node_id = find_OD_node_and_lane()   #find_OD_node_and_laneは出発地点と目的地をランダムに選ぶ　　135行目より
 
-    shortest_path = nx.dijkstra_path(DG, origin_node_id, destination_node_id)
-    car = Car(origin_node_id, destination_node_id, destination_lane_id, shortest_path, origin_lane_id, DG, False)
+    shortest_path = nx.dijkstra_path(DG, origin_node_id, destination_node_id)  #dijkstra_path(G, ソース, ターゲット, 重み='重み')  [ソース]   ソースからターゲットまでの最短加重パスを G 単位で返します。ダイクストラの方法を使用して最短加重経路を計算する グラフ内の 2 つのノード間。
+    car = Car(origin_node_id, destination_node_id, destination_lane_id, shortest_path, origin_lane_id, DG, False)  #外部ソースファイルからインポートしたクラスCarを使う
     car.init(DG)  # initialization of car settings
     cars_list.append(car)
-    edges_cars_dic[(edge_lanes_list[origin_lane_id].node_id_list[0], edge_lanes_list[origin_lane_id].node_id_list[1])].append(car)
+    edges_cars_dic[(edge_lanes_list[origin_lane_id].node_id_list[0], edge_lanes_list[origin_lane_id].node_id_list[1])].append(car)   #辞書の[]内で指定した要素にcarから追加？？
     if oppcomm_rate * number_of_cars < i: #車両の割合ですれ違いのフラグのon/off
-      car.opportunistic_communication_frag = False
+      car.opportunistic_communication_frag = False  #すれ違い通信のoff？？
 
   #悪意のある車両作成(仮)
   for j in range(number_of_fake_cars):

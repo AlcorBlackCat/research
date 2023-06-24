@@ -495,11 +495,11 @@ if __name__ == "__main__":   #もし__name__ == "__main__"ならば
       car.opportunistic_communication_frag = False  #すれ違い通信のoff？？
 
   #悪意のある車両作成(仮)
-  for j in range(number_of_fake_cars):
-    origin_lane_id, destination_lane_id, origin_node_id, destination_node_id = find_OD_node_and_lane()
+  for j in range(number_of_fake_cars):  #悪意を持った車両の数だけ繰り返す
+    origin_lane_id, destination_lane_id, origin_node_id, destination_node_id = find_OD_node_and_lane()  #find_OD_node_and_laneは出発地点と目的地をランダムに選ぶユーザー定義関数　　135行目より
     while True:
       try:
-        shortest_path = nx.dijkstra_path(DG_copied2, origin_node_id, destination_node_id)
+        shortest_path = nx.dijkstra_path(DG_copied2, origin_node_id, destination_node_id)   #車両作成の流れと全く同じ  483行目
         break
       except Exception:
         origin_lane_id, destination_lane_id, origin_node_id, destination_node_id = find_OD_node_and_lane()
@@ -509,14 +509,14 @@ if __name__ == "__main__":   #もし__name__ == "__main__"ならば
     car.init(DG)  # initialization of car settings
     cars_list.append(car)
     fakecars_list.append(car)
-    edges_cars_dic[(edge_lanes_list[origin_lane_id].node_id_list[0], edge_lanes_list[origin_lane_id].node_id_list[1])].append(car)
-    for j in range(number_of_fake_obstacles):
-      for k, v in obstacle_dic.items():
-        if v == True and k not in car.obstacles_info_list:
-          car.obstacle_dic[k] = True
-          car.obstacles_info_list.append(k)
+    edges_cars_dic[(edge_lanes_list[origin_lane_id].node_id_list[0], edge_lanes_list[origin_lane_id].node_id_list[1])].append(car)  #ここまで車両作成と同じ
+    for j in range(number_of_fake_obstacles):  #偽の通行不能個所ン数だけ繰り返す
+      for k, v in obstacle_dic.items():   #各要素のキーkeyと値valueの両方に対してforループ処理を行うには、items()メソッドを使う。 https://note.nkmk.me/python-dict-keys-values-items/
+        if v == True and k not in car.obstacles_info_list:  #もし、辞書に対してのvalue(key)じゃない方がTrueでなおかつ、kがcar.obstacles_info_listに入っていない場合
+          car.obstacle_dic[k] = True  #辞書のkというkeyをTrueとする  おそらく通行可能という情報を通行不可能に書き変え処理を行っている
+          car.obstacles_info_list.append(k)  #車が持っている通行不能個所リストにkを追加
     #print("偽の通行不能箇所の辞書" + str(car.obstacle_dic))
-    print(str(car) + "偽の通行不能箇所のリスト" + str(car.obstacles_info_list))
+    print(str(car) + "偽の通行不能箇所のリスト" + str(car.obstacles_info_list))  #偽の通行不能個所に関する情報の出力
     if oppcomm_rate * number_of_fake_cars < j: #車両の割合ですれ違いのフラグのon/off
       car.opportunistic_communication_frag = False
 

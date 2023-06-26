@@ -178,7 +178,7 @@ def find_obstacle_lane_and_node():   #関数の定義
   return obstacle_lane_id, obstacle_node_id
 
 #ネットワークの描画
-def draw_road_network(DG):  #raw_road_networkという関数の定義  引数はDG
+def draw_road_network(DG):  #draw_road_networkという関数の定義  引数はDG
   pos=nx.get_node_attributes(DG,'pos')   #get_node_attributesはグラフからノード属性を取得する　　DGのグラフからposという属性を取り出す？
   edge_color = nx.get_edge_attributes(DG, "color")   #get_edge_attributesはグラフからedge属性を取得する  DGのグラフからcolorという属性を取り出す
   nx.draw(DG, pos, node_size=1, arrowsize=5, with_labels=True, font_size=0.8, font_color="red", edge_color=edge_color.values())   #ネットワークの可視化
@@ -523,41 +523,41 @@ if __name__ == "__main__":   #もし__name__ == "__main__"ならば
 
 
   # animation initial settings
-  fig, ax = plt.subplots()
-  xdata = []; ydata = []
-  for i in range(len(cars_list)):
-    xdata.append( cars_list[i].current_position[0] )
+  fig, ax = plt.subplots()  #Figure：描画領域全体  Axes：一つ一つのプロットを描く領域  引数を省力：１つのサブプロットを生成  https://www.yutaka-note.com/entry/matplotlib_subplots#:~:text=nrows%3D2%20ncols%3D1%20fig%2C%20axes%20%3D%20plt.subplots%28nrows%3Dnrows%2C%20ncols%3Dncols%2C%20squeeze%3DFalse%2C,in%20range%28ncols%29%3A%20axes%5Bi%2Cj%5D.plot%28x%2C%20y%29%20axes%5Bi%2Cj%5D.set_title%28f%22plot%20%28%7Bi%7D%2C%20%7Bj%7D%29%22%29%20plt.show%28%29
+  xdata = []; ydata = []  #リストの初期化
+  for i in range(len(cars_list)):  
+    xdata.append( cars_list[i].current_position[0] )  #リストに[]で指定した要素を追加　　各車の位置
     ydata.append( cars_list[i].current_position[1] )
-  obstacle_x = []; obstacle_y = []
-  for i in range(len(obstacles_list)):
-    obstacle_x.append(obstacles_list[i].current_position[0])
+  obstacle_x = []; obstacle_y = []  #リストの初期化
+  for i in range(len(obstacles_list)):  
+    obstacle_x.append(obstacles_list[i].current_position[0])  #リストに[]で指定した要素を追加　　通行不能個所の位置
     obstacle_y.append(obstacles_list[i].current_position[1])
-  Fxdata = []; Fydata = []
+  Fxdata = []; Fydata = []  #リストの初期化
   for i in range(len(fakecars_list)):
-    Fxdata.append( fakecars_list[i].current_position[0] )
+    Fxdata.append( fakecars_list[i].current_position[0] )  #リストに[]で指定した要素を追加  悪意もち車両のx軸y軸の位置？
     Fydata.append( fakecars_list[i].current_position[1] )
-  fakeobs_x = []; fakeobs_y = []
+  fakeobs_x = []; fakeobs_y = []  #リストの初期化
   for i in range(len(fakeobs_list)):
-    fakeobs_x.append(fakeobs_list[i].current_position[0])
+    fakeobs_x.append(fakeobs_list[i].current_position[0])  #リストに[]で指定した要素を追加  偽の通行不能個所の位置
     fakeobs_y.append(fakeobs_list[i].current_position[1])
 
 
-  line1, = plt.plot([], [], color="green", marker="s", linestyle="", markersize=5)
+  line1, = plt.plot([], [], color="green", marker="s", linestyle="", markersize=5)  #グラフの描画　色は緑　　https://qiita.com/ground0state/items/f415d771fd1062f81830
   line2, = plt.plot([], [], color="red", marker="s", linestyle="", markersize=5)
   line3, = plt.plot([], [], color="blue", marker="s", linestyle="", markersize=5)
   line4, = plt.plot([], [], color="cyan", marker="s", linestyle="", markersize=5)
-  title = ax.text(20.0, -20.0, "", va="center")
+  title = ax.text(20.0, -20.0, "", va="center")  #https://python.atelierkobato.com/text/  最初の数字二つは文字を表示する座標？　　文字を表示する
 
   #img = Image.open(png_infilename)
   #img_list = np.asarray(img)
   #plt.imshow(img_list)
   ## draw road network
-  draw_road_network(DG)
+  draw_road_network(DG)  #181行目より、draw_road_networkという関数を使ってネットワークを描画
 
 
   print("通行不能箇所の辞書" + str(obstacle_dic))
   #print("remath:" + str(math_count) + " through:" + str(avoid_count) + " pass:" + str(passing_comunication))
   print("### Start of simulation ###")
-  ani = FuncAnimation(fig, animate, frames=range(1000), init_func=init, blit=True, interval= 10)
+  ani = FuncAnimation(fig, animate, frames=range(1000), init_func=init, blit=True, interval= 10)  #アニメーションを作成するのに必要な情報を渡せばアニメーションを作成してくれます
   #ani.save("grid-sanimation.gif", writer='imagemagick')
-  plt.show()
+  plt.show()  #複数のFigureを表示したいときに、使えたりします  実行されたとき始めてウィンドウが立ち上がり、そのウィンドウにグラフが表示されるといった状況になるはず

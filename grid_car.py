@@ -44,7 +44,7 @@ class Car:
   # Optimal Velocity Function to determine the current speed
   #最適速度関数
   def V(self, inter_car_distance):
-    return 0.5*self.current_max_speed*(np.tanh(inter_car_distance-2) + np.tanh(2))
+    return 0.5*self.current_max_speed*(np.tanh(inter_car_distance-2) + np.tanh(2)) #車間距離から自身の速度を決定する
 
   # update car's speed
   #inter_car_distance = diff_dist

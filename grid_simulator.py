@@ -76,13 +76,13 @@ def create_road_network(root):   #65行目で返したrootを引数に指定し�
  
   DG = nx.DiGraph()   # Directed graph of road network  有向グラフの場合の空のグラフ作成
   edge_lanes_list = []   # list of lane instances   空のリストの作成   辺、線のリスト
-  for child in root:   #変数childにrootの要素が順に代入          #この辺のtagやattribはxmlファイルの読み込み関係
+  for child in root:   #変数childにrootの要素が順に代入          #この辺のtagやattribはxmlファイルの読み込み関係  https://qiita.com/sino20023/items/0314438d397240e56576
     if child.tag == "edge":  #もし、childのtagが"edge"に等しいならば
       lane = Lane()   #lane=クラスlane
       if "from" in child.attrib and "to" in child.attrib:   #もしfromとtoがchild.attribに含まれる場合
         lane.add_from_to(child.attrib["from"], child.attrib["to"])   #laneに要素を追加？
 
-      for child2 in child:   #child2にchildの要素を順に代入、その後にそれぞれのリストを定義している
+      for child2 in child:   #child2にchildの要素を順に代入、その後にそれぞれのリストを定義している  
         data_list  = child2.attrib["shape"].split(" ")  
         node_id_list = []
         node_x_list = []; node_y_list = []
@@ -152,7 +152,7 @@ def find_OD_node_and_lane():   #find_OD_node_and_lane()の定義
 
   return origin_lane_id, destination_lane_id, origin_node_id, destination_node_id  #origin_lane_id, destination_lane_id, origin_node_id, destination_node_idを戻り値とする
 
-#障害物を見つける
+#障害物を見つける  ここが障害物情報を保管するコード
 def find_obstacle_lane_and_node():   #関数の定義
   while True:   #Trueである間繰り返す
     obstacle_lane_id = np.random.randint(len(edge_lanes_list))  #edge_lanes_listの長さの範囲の整数の乱数を返す

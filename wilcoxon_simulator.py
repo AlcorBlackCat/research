@@ -40,7 +40,7 @@ print(repetition,datetime.datetime.now())
 n,bins,patches=plt.hist(U_list,bins=n1*n2)
 
 accum=0.0
-for i in range(len(n)):
+for i in range(len(n)):  #もしかしたら９５%信頼区間かも　下限と上限
     accum += float(n[i])
     if (accum/repetition) > 0.025:
         print(n[i],bins[i])

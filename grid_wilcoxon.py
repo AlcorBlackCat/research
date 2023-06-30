@@ -20,7 +20,7 @@ count = 0
 number_of_cars = 300
 half_number_of_cars = int(number_of_cars/2)
 
-for file_name1 in os.listdir(dir1): #ファイルディレクトリ「dir1」の中身をファイル、ディレクトリ問わず取り出す→ 配列「file_name1」に格納？
+for file_name1 in os.listdir(dir1): #ファイルディレクトリ「dir1」の中身をファイル、ディレクトリ問わず取り出す→ 配列「file_name1」に格納？    os.listdir  指定したファイル・ディレクトリの一覧を確認する
     file_path1 = os.path.join(dir1,file_name1) #上で取り出したものについて、それぞれdir1/file_name1というパスを作る？
     #print(file_path1)
 
@@ -63,7 +63,7 @@ for file_name1 in os.listdir(dir1): #ファイルディレクトリ「dir1」の
     duration_list_sorted2 = []
     distance_list_sorted2 = []
     for i in range(half_number_of_cars):
-        duration_list_sorted2.append((np.random.choice(duration_list2_sorted)))
+        duration_list_sorted2.append((np.random.choice(duration_list2_sorted)))  #この辺で各標本の小さい順にソートした配列を準備してる
         distance_list_sorted2.append((np.random.choice(distance_list2_sorted)))
 
     U = 0 #ここから違う処理
@@ -71,7 +71,7 @@ for file_name1 in os.listdir(dir1): #ファイルディレクトリ「dir1」の
         for k in range(len(duration_list_sorted1)):
             if duration_list_sorted2[j] > duration_list_sorted1[k]:
                 U += 1
-    U_duration_list.append(U) #Uはウィルコクソンの順位和検定における転倒数？　一番最初に生成しておいた配列にUを格納
+    U_duration_list.append(U) #Uはウィルコクソンの順位和検定における転倒数？　一番最初に生成しておいた配列にUを格納 移動時間
 
     U = 0
     for j in range(len(distance_list_sorted2)):

@@ -14,7 +14,7 @@ class Obstacle:   #クラスの定義    この中では通行不能個所につ
       self.fakeobs_lane_id = obstacle_lane_id
 
 
-  def init(self, DG):     #DGの定義
+  def init(self, DG):     #DGの定義 もしくはinitの定義
     if self.fake_flag == False:    #もしfake__flagがFalseなら(偽情報がないなら？)
       current_node_id = self.obstacle_node_id   #current_node_idはobstacle_node_idというインスタンス
       #print("通行不能箇所" + str(current_node_id))

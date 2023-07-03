@@ -286,7 +286,7 @@ def animate(time):
                               car.current_sp_index += 1  #カウント？値？の更新
                               current_start_node_id = car.shortest_path[car.current_sp_index - 1]  #現在の開始地点を最短経路に更新？？？     shortest_path()はそれで一つの関数
                               #print("現在地:" + str(current_start_node_id) + " 目的地:" + str(car.dest_node_id))
-                              car.shortest_path = nx.dijkstra_path(car.DG_copied, current_start_node_id, car.dest_node_id)  #ダイクストラ法（Dijkstra's algorithm）は辺の重みが非負数のグラフの単一始点最短経路問題を解くアルゴリズム。
+                              car.shortest_path = nx.dijkstra_path(car.DG_copied, current_start_node_id, car.dest_node_id)  #ダイクストラ法（Dijkstra's algorithm）は辺の重みが非負数のグラフの単一始点最短経路問題を解くアルゴリズム。　dest = 目的地
                               math_count += 1  #カウントの更新
                               #print("再計算" + str(math_count))
                               #print("新最短経路" + str(car.shortest_path))
@@ -468,7 +468,7 @@ if __name__ == "__main__":   #もし__name__ == "__main__"ならば
       fakeobs_node_id_list.append(obstacle_node_id_list[number_of_obstacles + i])  #偽の通行不能個所のノードidリストに（）内のものを追加
     #print(obstacle_dic)
     #print(fakeobs_node_id_list)
-    if nx.is_weakly_connected(DG) == True:   #nx.is_weakly_connectedは弱い接続の有向グラフをテストします
+    if nx.is_weakly_connected(DG) == True:   #nx.is_weakly_connectedは弱い接続の有向グラフをテストします  おそらくシミュレーションの道路が連結（どこか袋小路になっていないか確認）
       break
 
   #車両作成

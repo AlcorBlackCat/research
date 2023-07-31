@@ -139,7 +139,7 @@ class Car:
         diff_dist = 50.0
       self.update_current_speed(sensitivity, diff_dist)
       self.current_lane_id = lane_dic[self.shortest_path[self.current_sp_index]]
-    return x_new, y_new, goal_arrived_flag, car_forward_pt, diff_dist
+    return x_new, y_new, car_forward_pt, diff_dist
 
   def U_turn(self, edges_cars_dic,lane_dic, edge_lanes_list, x_y_dic, obstacle_node_id_list):
     self.current_sp_index += 1

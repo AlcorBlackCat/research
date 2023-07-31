@@ -40,22 +40,22 @@ print(number_of_cars,number_of_obstacles,oppcomm_rate)
 
 def find_fake_OD_node_and_lane(cars_list, edge_lanes_list):
     while True:
-        origin_lane_id = np.random.randint(len(edge_lanes_list))
-        destination_lane_id = origin_lane_id
-        while origin_lane_id == destination_lane_id:
-            destination_lane_id = np.random.randint(len(edge_lanes_list))
+        orig_lane_id = np.random.randint(len(edge_lanes_list))
+        dest_lane_id = orig_lane_id
+        while orig_lane_id == dest_lane_id:
+            dest_lane_id = np.random.randint(len(edge_lanes_list))
 
-        origin_node_id = x_y_dic[(edge_lanes_list[origin_lane_id].node_x_list[0], edge_lanes_list[origin_lane_id].node_y_list[0])]
-        destination_node_id = x_y_dic[(edge_lanes_list[destination_lane_id].node_x_list[-1], edge_lanes_list[destination_lane_id].node_y_list[-1])]
+        orig_node_id = x_y_dic[(edge_lanes_list[orig_lane_id].node_x_list[0], edge_lanes_list[orig_lane_id].node_y_list[0])]
+        dest_node_id = x_y_dic[(edge_lanes_list[dest_lane_id].node_x_list[-1], edge_lanes_list[dest_lane_id].node_y_list[-1])]
 
-        while origin_node_id in obstacle_node_id_list or destination_node_id in obstacle_node_id_list:
-            origin_lane_id = np.random.randint(len(edge_lanes_list))
-            destination_lane_id = origin_lane_id
-            while origin_lane_id == destination_lane_id:
-                destination_lane_id = np.random.randint(len(edge_lanes_list))
+        while orig_node_id in obstacle_node_id_list or dest_node_id in obstacle_node_id_list:
+            orig_lane_id = np.random.randint(len(edge_lanes_list))
+            dest_lane_id = orig_lane_id
+            while orig_lane_id == dest_lane_id:
+                dest_lane_id = np.random.randint(len(edge_lanes_list))
 
-            origin_node_id = x_y_dic[(edge_lanes_list[origin_lane_id].node_x_list[0], edge_lanes_list[origin_lane_id].node_y_list[0])]
-            destination_node_id = x_y_dic[(edge_lanes_list[destination_lane_id].node_x_list[-1], edge_lanes_list[destination_lane_id].node_y_list[-1])]
+            orig_node_id = x_y_dic[(edge_lanes_list[orig_lane_id].node_x_list[0], edge_lanes_list[orig_lane_id].node_y_list[0])]
+            dest_node_id = x_y_dic[(edge_lanes_list[dest_lane_id].node_x_list[-1], edge_lanes_list[dest_lane_id].node_y_list[-1])]
 
         # Check if the selected OD is used by other cars
         is_used = False
@@ -75,7 +75,7 @@ def create_fake_obstacles(number_of_fakeobstacles, edge_lanes_list):
     fake_obstacle_node_ids = np.random.choice(len(edge_lanes_list), number_of_fakeobstacles, replace=False)
     for node_id in fake_obstacle_node_ids:
         lane = edge_lanes_list[node_id]
-        fake_obstacle = FakeObstacle(node_id, lane)
+        fake_obstacle = FakeObstacle(node_id, lane, DG)
         fake_obstacle.init(DG)
         fake_obstacles_list.append(fake_obstacle)
         edges_obstacles_dic[(lane.node_id_list[0], lane.node_id_list[1])].append(fake_obstacle)
@@ -238,9 +238,16 @@ def animate(time):
   xdata = []; ydata=[]
 
   for car in cars_list:
-    if car.__class__.__name__ == 'Car':
-      time_list.append(time)
-      x_new, y_new, goal_arrived_flag, car_forward_pt, diff_dist = car.move(edges_cars_dic, sensitivity, lane_dic, edge_length_dic)
+   if not isinstance(car, Obstacle):
+    if not car.goal_arrived:
+      if isinstance(car, FakeCar) and car.is_fake_obstacle_ahead():
+                x_new, y_new = car.U_turn(edges_cars_dic, lane_dic, edge_lanes_list, x_y_dic, obstacle_node_id_list)
+      else:
+                x_new, y_new, car_forward_pt, diff_dist = car.move(edges_cars_dic, sensitivity, lane_dic, edge_length_dic)
+      if isinstance(car, FakeCar) and diff_dist < 30 and not car_forward_pt.goal_arrived:
+                    x_new, y_new = car.U_turn(edges_cars_dic, lane_dic, edge_lanes_list, x_y_dic, obstacle_node_id_list)
+
+      goal_arrived_flag = car.goal_arrived
 
       # update x_new and y_new
       #xdata.append(x_new)
@@ -402,7 +409,7 @@ if __name__ == "__main__":
   while True:
     for i in range(number_of_obstacles):
       obstacle_lane_id, obstacle_node_id = find_obstacle_lane_and_node()
-      obstacle = Obstacle(obstacle_node_id, obstacle_lane_id)
+      obstacle = Obstacle(obstacle_node_id, obstacle_lane_id, DG)
       obstacle.init(DG)
       obstacles_list.append(obstacle)
       cars_list.append(obstacle)

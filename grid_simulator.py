@@ -210,10 +210,10 @@ def draw_road_network(DG):  #draw_road_networkという関数の定義  引数�
 
 #  For initializing animation settings   (アニメーション設定を初期化する場合)
 def init():
-  line1.set_data([], [])  #空line1にデータをセット作成？
-  line2.set_data([], [])
-  line3.set_data([], [])
-  line4.set_data([], [])
+  line1.set_data([], [])  #グラフにプロットする普通車の初期化
+  line2.set_data([], [])  #通行不能箇所
+  line3.set_data([], [])  #悪意を持った車両
+  line4.set_data([], [])  #偽の通行不能箇所
   title.set_text("Simulation step: 0")   #titeleに（）内の文字をセット？
   return line1, line2, line3, line4, title
 

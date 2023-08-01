@@ -12,6 +12,8 @@ import math
 import copy
 import csv
 
+import random
+
 from grid_car import Car, FakeCar
 from lane import Lane
 from grid_road_segment import RoadSegment
@@ -70,30 +72,46 @@ def find_fake_OD_node_and_lane(cars_list, edge_lanes_list):
 
     return origin_lane_id, destination_lane_id, origin_node_id, destination_node_id
 
-def create_fake_obstacles(number_of_fakeobstacles, edge_lanes_list):
+def create_fake_obstacles(number_of_fakeobstacles, edge_lanes_list, DG):
     fake_obstacles_list = []
-    fake_obstacle_node_ids = np.random.choice(len(edge_lanes_list), number_of_fakeobstacles, replace=False)
-    for node_id in fake_obstacle_node_ids:
-        lane = edge_lanes_list[node_id]
-        fake_obstacle = FakeObstacle(node_id, lane, DG)
-        fake_obstacle.init(DG)
+    all_nodes = set(DG.nodes)
+    for _ in range(number_of_fakeobstacles):
+        lane = random.choice(edge_lanes_list)
+        valid_nodes = set(lane.node_x_list + lane.node_y_list) & all_nodes
+        if not valid_nodes:
+            continue  # Skip if no valid nodes in the lane.
+        node_id = random.choice(list(valid_nodes))
+        shortest_path = nx.dijkstra_path(DG, node_id, lane.to_id)
+        current_lane_id = lane.lane_id
+        fake_obstacle = FakeObstacle(node_id, lane.lane_id, shortest_path, current_lane_id, DG)
         fake_obstacles_list.append(fake_obstacle)
-        edges_obstacles_dic[(lane.node_id_list[0], lane.node_id_list[1])].append(fake_obstacle)
-        edges_cars_dic[(lane.node_id_list[0], lane.node_id_list[1])].append(fake_obstacle)
+
+        # Add the FakeObstacle object to DG graph nodes.
+        DG.nodes[node_id]["obj"] = fake_obstacle
+
     return fake_obstacles_list
  
 
 def create_fake_cars(number_of_fakecars, DG, cars_list, edge_lanes_list):
     fake_cars_list = []
-    for i in range(number_of_fakecars):
-        orig_lane_id, dest_lane_id, orig_node_id, dest_node_id = find_fake_OD_node_and_lane(cars_list, edge_lanes_list)
+    for _ in range(number_of_fakecars):
+        orig_node_id, dest_node_id, dest_lane_id, orig_lane_id = get_orig_dest(DG, cars_list, edge_lanes_list)
         shortest_path = nx.dijkstra_path(DG, orig_node_id, dest_node_id)
         fake_car = FakeCar(orig_node_id, dest_node_id, dest_lane_id, shortest_path, orig_lane_id, DG)
-        fake_car.init(DG)
         fake_cars_list.append(fake_car)
-        cars_list.append(fake_car)
-        edges_cars_dic[(edge_lanes_list[origin_lane_id].node_id_list[0], edge_lanes_list[orig_lane_id].node_id_list[1])].append(fake_car)
     return fake_cars_list
+
+def get_orig_dest(DG, cars_list, edge_lanes_list):
+    orig_lane = random.choice(edge_lanes_list)
+    dest_lane = random.choice(edge_lanes_list)
+
+    while orig_lane == dest_lane:
+        dest_lane = random.choice(edge_lanes_list)
+
+    orig_node_id = random.choice(orig_lane.node_x_list + orig_lane.node_y_list)
+    dest_node_id = random.choice(dest_lane.node_x_list + dest_lane.node_y_list)
+
+    return orig_node_id, dest_node_id, dest_lane.lane_id, orig_lane.lane_id
 
 
 
@@ -442,7 +460,7 @@ if __name__ == "__main__":
 
 
     # FakeObstacleの生成
-    fake_obstacles_list = create_fake_obstacles(number_of_fakeobstacles, edge_lanes_list)
+    fake_obstacles_list = create_fake_obstacles(number_of_fakeobstacles, edge_lanes_list, DG)
     obstacles_list += fake_obstacles_list  # obstacles_listに追加
 
     # FakeCarの生成

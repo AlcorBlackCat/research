@@ -219,9 +219,34 @@ class Car:
     return x_new, y_new
 
 
-class FakeCar(Car):
-    def __init__(self, orig_node_id, dest_node_id, dest_lane_id, shortest_path, current_lane_id, DG):
-        super().__init__(orig_node_id, dest_node_id, dest_lane_id, shortest_path, current_lane_id, DG)
+class FakeCar:
+    def __init__(self, orig_node_id, dest_node_id, dest_lane_id, shortest_path, orig_lane_id):
+        self.orig_node_id = orig_node_id
+        self.dest_node_id = dest_node_id
+        self.dest_lane_id = dest_lane_id
+        self.shortest_path = shortest_path
+        self.current_lane_id = orig_lane_id
+        self.current_position = DG.nodes[orig_node_id]["pos"]
+        self.speed = 0.0
+        self.is_fake_obstacle_ahead_flag = False
+        self.goal_arrived = False
+
+        # グラフにFakeCarオブジェクトを追加する
+        DG.add_node(self, obj=self)
+
+    def move(self, edges_cars_dic, sensitivity, lane_dic, edge_length_dic):
+        # Calculate the next position of the fake car.
+        next_node = self.current_lane.to_id
+        x_new, y_new = self.calc_next_position(self.current_position, next_node, self.velocity, sensitivity)
+
+        # Update the current position of the fake car.
+        self.current_position = (x_new, y_new)
+
+        # Add the FakeCar object to DG graph nodes.
+        self.DG.nodes[next_node]["obj"] = self
+
+        # Return the new position of the fake car and other information.
+        return x_new, y_new, None, None, None
 
     def is_fake_obstacle_ahead(self):
         fake_obstacle_ahead = False

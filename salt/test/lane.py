@@ -1,7 +1,10 @@
 class Lane:
-  def __init__(self):
-    self.car_list = []
-    self.pheromone = 0
+  def __init__(self, from_id, to_id, lane_id):
+        self.from_id = from_id
+        self.to_id = to_id
+        self.lane_id = lane_id  # 追加: レーンのID
+        self.node_x_list, self.node_y_list = self.get_lane_node_list(from_id, to_id)
+        self.length = self.calculate_length()
 
   def add_from_to(self, from_id, to_id):
     self.from_id = from_id

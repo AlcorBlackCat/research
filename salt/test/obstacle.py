@@ -31,8 +31,11 @@ class Obstacle:
        return x_new, y_new
 
 class FakeObstacle(Obstacle):
-    def __init__(self, obstacle_node_id, obstacle_lane_id, DG):
-        super().__init__(obstacle_node_id, obstacle_lane_id, DG)
+    def __init__(self, node_id, lane, shortest_path, current_lane_id, DG):
+        super().__init__(node_id, lane, DG)
+        self.shortest_path = shortest_path
+        self.current_lane_id = current_lane_id
+        DG.nodes[obstacle_node_id]["obj"] = self
 
     def does_affect_passing(self):
         return False

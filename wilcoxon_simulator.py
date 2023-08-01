@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # coding: utf-8
 
+#ウィルコクソンでデータサンプルを作るプログラム。多分それ以上でも以下でもないです。もし動かなかったらこのコメントを消して動かして下さい。
+
 import numpy as np
 import matplotlib.pyplot as plt
 import datetime
@@ -20,8 +22,8 @@ for i in range(repetition):
 
     #ランダムサンプリング
     for j in range(n1):
-        sampleX.append(np.random.pareto(1.0))
-    sampleX_sorted=sorted(sampleX)
+        sampleX.append(np.random.pareto(1.0)) #パレート分布からランダムに取得、sampleXに追加
+    sampleX_sorted=sorted(sampleX) #sampleXをソートしたものをsampleX_sortedとする
 
     for j in range(n2):
         sampleY.append(np.random.pareto(1.0))
@@ -38,7 +40,7 @@ print(repetition,datetime.datetime.now())
 n,bins,patches=plt.hist(U_list,bins=n1*n2)
 
 accum=0.0
-for i in range(len(n)):
+for i in range(len(n)):  #もしかしたら９５%信頼区間かも　下限と上限
     accum += float(n[i])
     if (accum/repetition) > 0.025:
         print(n[i],bins[i])

@@ -28,7 +28,7 @@ infilename = "grid5x5.net.xml"#別ファイルからマップ情報を引っ張�
 
 #opportunistic_communication_frag = True
 #a = np.random.randint(12345,123456)
-a = 12345
+a = 123456
 #a = int(sys.argv[1])
 print("seed値 : " + str(a))
 np.random.seed(a)

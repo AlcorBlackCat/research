@@ -8,25 +8,28 @@ def animate(time):
     for num_car in cars_list:
         if num_car.__class__.__name__ == 'Car':
             time_list.append(time) #シミュレータの経過時間を格納？
-            x_new, y_new, goal_arrived_flag, car_forward_pt, diff_dist = num_car.move(edges_cars_dic, sensitivity, lane_dic, edge_length_dic)   
+            x_new, y_new, goal_arrived_flag, car_forward_pt, diff_dist = num_car.move(edges_cars_dic, sensitivity, lane_dic, edge_length_dic)
+        elif num_car.__class__.__name__ == 'fakeCar':
+            time_list.append(time)
+            x_new, y_new, goal_arrived_flag, car_forward_pt, diff_dist = num_car.move(edges_cars_dic, sensitivity, lane_dic, edge_length_dic)
 
         if num_car.goal_arrived == True:  #車がgoal到着しているなら
             goal_count += 1
-            number_of_shortest_path_changes_list.append(num_car.number_of_shortest_path_changes) #最短経路変更回数
+            #number_of_shortest_path_changes_list.append(num_car.number_of_shortest_path_changes) #最短経路変更回数
             #number_of_opportunistic_communication_list.append(num_car.number_of_opportunistic_communication) すれ違い通信数  未実装？
             goal_time_list.append(num_car.elapsed_time) #elapsed = 経過時間
             moving_distance_list.append(round(num_car.moving_distance,1)) #移動距離をリストに追加　四捨五入済み
 
             if type(cars_list[num_car]) == Car:
-                cars_list.remove( car )
+                cars_list.remove( num_car )
 
             elif type(cars_list[num_car]) == fake_Car:
-                cars_list.remove( car )   
+                cars_list.remove( num_car )   
                 print("悪意のある車の削除")
 
         
         #障害物があればUターン
-        if car_forward_pt.__class__.__name__ != "Car" and diff_dist <= 20: #前方にあるのが車じゃない（障害物なら）　なおかつ　その距離（車間距離）が20以下なら
+        if car_forward_pt.__class__.__name__ != "Car" and car_forward_pt.__class__.__name__ != "fakeCar" and diff_dist <= 20: #前方にあるのが車じゃない（障害物なら）　なおかつ　その距離（車間距離）が20以下なら
             if type(car_forward_pt) == Obstacle:
                 x_new, y_new = car.U_turn(edges_cars_dic, lane_dic, edge_lanes_list, x_y_dic, obstacle_node_id_list) # 新しいx, y　のidに（Uターンする）
 

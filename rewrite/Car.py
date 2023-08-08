@@ -173,8 +173,46 @@ class Car:
 
         return x_new, y_new
        
+    def trade_obstacle_info(self, obstacle_dic,car_info):
+        self.obstacle_dic = obstacle_dic
+        comm_target = car_info
+        if type(cars_list[comm_target]) == Car:
+            for i in self.obstacle_dic.key():
+                if i not in comm_target.obstacle_dic:
+                    comm_target.obstacle_dic.append(i) #相手が持ってる障害物情報に追加
+                else:
+                    pass
+
+            for j in comm_target.obstacle_dic.key():
+                if j not in self.obstacle_dic:
+                    self.obstacle_dic.append(j)  #自分が持ってる障害物情報に追加
+                else:
+                    pass
+        
+        if type(cars_list[comm_target]) == fake_Car:
+            for i in self.obstacle_dic.key():  #相手の辞書に追加
+                if i not in comm_target.obstacle_dic and i not in comm_target.fake_obstacle_dic:
+                    comm_target.obstacle_dic.append(i)
+                else:
+                    pass
+            
+            for j in comm_target.obstacle_dic.key() :  #自分の方に追加
+                if j not in self.obstacle_dic:
+                    self.obstacle_dic.append(j)
+                else:
+                    pass
+            for k in comm_target.fake_obstacle_dic.key():  #通信する車両がもっているニセの通行不能箇所情報を自分が持ってる辞書を比較し、自車が持っていないなら追加
+                if k not in self.obstacle_dic:
+                    self.obstacle_dic.append(k)
+                else:
+                    pass
+
+
+       
     
 
-class fake_Car(Car):
-    pass
+class fake_Car(Car):  #経路選択にfakeobsの影響を受けない、fakeobsを最初から持ってる仕様に
+    #TODO  fake_obstacle_dicの追加、経路計算時にfake_obstacle_dicを除外
+    def creat_fake_obstacle(self,number_of_fakeobstacle, ):
+        self.number_of_obstacle = number_of_fakeobstacle
         

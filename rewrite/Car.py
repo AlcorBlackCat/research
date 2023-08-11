@@ -144,8 +144,9 @@ class Car:
         self.current_end_node = self.DG_copied.nodes[current_end_node_id]["pos"]
 
         #障害物を含む辺の削除？
-        if self.DG_copied.has_edge(pre_start_node_id, pre_end_node_id):
-            self.DG_copied.remove_edge(pre_start_node_id, pre_end_node_id)
+        for i in obstacle_list:
+            if self.DG_copied.has_edge(*i):
+                self.DG_copied.remove_edge(*i)
 
         while True:
             try:

@@ -9,6 +9,7 @@ number_of_cars = 300
 number_of_obstacles = 10 
 number_of_fake_cars = 1 
 number_of_fake_obstacles = 1 
+having_fake_obstacle = 1   #車が持つ偽の通行不能箇所数
 opportunistic_communication_rate = 1.0  
 sensitivity = 1.0
 

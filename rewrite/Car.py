@@ -207,12 +207,22 @@ class Car:
                 else:
                     pass
 
+   def astar_shortest_path(self):  #経路再計算
+        self.shortest_path = nx.astar_path(self.DG_copied, x_y_dic[(self.current_position[0], self.current_position[1])], self.destination_node_id)
+
+
 
        
     
 
 class fake_Car(Car):  #経路選択にfakeobsの影響を受けない、fakeobsを最初から持ってる仕様に
-    #TODO  fake_obstacle_dicの追加、経路計算時にfake_obstacle_dicを除外
-    def creat_fake_obstacle(self,number_of_fakeobstacle, ):
-        self.number_of_obstacle = number_of_fakeobstacle
-        
+    #TODO  fake_obstacle_dicの追加、経路計算時にfake_obstacle_dicを除外　obstaclelistからランダムで抽選→fakeobsに変換
+    def creat_fake_obstacle():
+        fake_obstacle_dic = []
+
+        for j in range(having_fake_obstacle):
+            a = np.random.choice(obstacle_list)
+            fake_obstacle_dic.append(a)
+            fake_obstacle_list.append(a) 
+            obstacle_list.remove(a)
+

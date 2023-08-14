@@ -20,10 +20,10 @@ def animate(time):
             goal_time_list.append(num_car.elapsed_time) #elapsed = 経過時間
             moving_distance_list.append(round(num_car.moving_distance,1)) #移動距離をリストに追加　四捨五入済み
 
-            if type(cars_list[num_car]) == Car:
+            if type(num_car) == Car:
                 cars_list.remove( num_car )
 
-            elif type(cars_list[num_car]) == fake_Car:
+            elif type(num_car) == fake_Car:
                 cars_list.remove( num_car )   
                 print("悪意のある車の削除")
 

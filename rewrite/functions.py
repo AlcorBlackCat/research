@@ -5,6 +5,23 @@
 #目次
 #8 グローバル変数
 
+import xml.etree.ElementTree as ET
+import sys
+import matplotlib.pyplot as plt
+import networkx as nx
+import numpy as np
+import math
+import copy
+import csv
+from matplotlib.animation import FuncAnimation
+
+from grid_car import Car, fakeCar
+from obstacle import Obstacle, fakeObstacle
+from lane import Lane
+from grid_road_segment import RoadSegment
+
+infilename = "grid5×5.net.xml"
+
 number_of_cars = 300 
 number_of_obstacles = 10 
 number_of_fake_cars = 1 
@@ -12,6 +29,8 @@ number_of_fake_obstacles = 1
 having_fake_obstacle = 1   #車が持つ偽の通行不能箇所数
 opportunistic_communication_rate = 1.0  
 sensitivity = 1.0
+
+np.random.seed(202)
 
 obstacles_list = []
 fakeobs_list = []
@@ -27,6 +46,80 @@ goal_time_list = []
 number_of_shortest_path_changes_list = []
 moving_distance_list = []
 time_list = []
+
+def read_parse_netxml(infilename):
+  # open file
+  infile = open(infilename, "r")
+
+  # parsing xml
+  root = ET.fromstring(infile.read())
+  #print(root.tag, root.attrib)
+  return root
+
+def create_road_network(root):
+  # read edge tagged data for reading the road network
+  # create data structure of road network using NetworkX
+  x_y_dic = {} # input: node's x,y pos, output: node id
+  lane_dic = {}
+  edge_length_dic = {}
+  node_id = 0
+  lane_id = 0
+
+  DG = nx.DiGraph() # Directed graph of road network
+  edge_lanes_list = [] # list of lane instances
+  for child in root:
+    if child.tag == "edge":
+      lane = Lane()
+      if "from" in child.attrib and "to" in child.attrib:
+        lane.add_from_to(child.attrib["from"], child.attrib["to"])
+
+      for child2 in child:
+        data_list  = child2.attrib["shape"].split(" ")
+        node_id_list = []
+        node_x_list = []; node_y_list = []
+        distance_list = []
+        data_counter = 0
+
+        for data in data_list:
+          node_x_list.append( float(data.split(",")[0]) )
+          node_y_list.append( float(data.split(",")[1]) )
+          if (float(data.split(",")[0]), float(data.split(",")[1])) not in x_y_dic.keys():
+            node_id_list.append(node_id)
+            DG.add_node(node_id, pos=(float(data.split(",")[0]), float(data.split(",")[1])))
+            x_y_dic[ (float(data.split(",")[0]), float(data.split(",")[1])) ] = node_id
+            node_id += 1
+
+          else:
+            node_id_list.append( x_y_dic[ (float(data.split(",")[0]), float(data.split(",")[1])) ] )
+
+          if data_counter >= 1:
+            distance_list.append( np.sqrt( (float(data.split(",")[0]) - old_node_x)**2 + (float(data.split(",")[1]) - old_node_y)**2) )
+          old_node_x = float(data.split(",")[0])
+          old_node_y = float(data.split(",")[1])
+          data_counter += 1
+        for i in range(len(node_id_list)-1):
+          DG.add_edge(node_id_list[i], node_id_list[i+1], weight=distance_list[i], color="black", speed=float(child2.attrib["speed"])) # calculate weight here
+        if "from" in child.attrib and "to" in child.attrib:
+          #print("エッジ長とレーン番号の組",float(child2.attrib["length"]), lane_id)
+          edge_length_dic[lane_id] = float(child2.attrib["length"])
+          for i in range(len(node_x_list)):
+            lane_dic[(x_y_dic[node_x_list[i],node_y_list[i]])] = lane_id
+          lane_id += 1
+          lane.set_others(float(child2.attrib["speed"]), node_id_list, node_x_list, node_y_list)
+          edge_lanes_list.append(lane)  # to modify here
+
+  return x_y_dic, lane_dic, edge_length_dic, DG, edge_lanes_list
+
+def create_road_segments(edge_lanes_list):
+  road_segments_list = []
+  for i in range(len(edge_lanes_list)-1):
+    for j in range(i+1, len(edge_lanes_list)):
+      if edge_lanes_list[i].from_id == edge_lanes_list[j].to_id and edge_lanes_list[i].to_id == edge_lanes_list[j].from_id:
+        road_segments_list.append(RoadSegment(edge_lanes_list[i], edge_lanes_list[j]))
+        break
+  return road_segments_list
+
+
 
 def find_OD_node_and_lane():   #find_OD_node_and_lane()の定義
 

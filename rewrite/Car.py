@@ -150,7 +150,7 @@ class Car:
 
         while True:
             try:
-                self.shortest_path = nx.dijkstra_path(self.DG_copied, current_start_node_id, self.dest_node_id)
+                self.shortest_path = nx.astar_path(self.DG_copied, current_start_node_id, self.dest_node_id)
                 break
             except Exception:
                 self.dest_lane_id = np.random.randint(len(edge_lanes_list))

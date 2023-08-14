@@ -621,7 +621,7 @@ if __name__ == "__main__":   #もし__name__ == "__main__"ならば
   draw_road_network(DG)  #181行目より、draw_road_networkという関数を使ってネットワークを描画
 
 
-  print("通行不能箇所の辞書" + str(obstacle_dic))
+  #print("通行不能箇所の辞書" + str(obstacle_dic))
   #print("remath:" + str(math_count) + " through:" + str(avoid_count) + " pass:" + str(passing_comunication))
   print("### Start of simulation ###")
   ani = FuncAnimation(fig, animate, frames=range(1000), init_func=init, blit=True, interval= 10)  #アニメーションを作成するのに必要な情報を渡せばアニメーションを作成してくれます

@@ -119,10 +119,10 @@ def create_road_segments(edge_lanes_list):
         break
   return road_segments_list
 
-def create_obstacles(number_of_obstacles, number_of_fake_cars, having_fake_obstacle):
+def create_obstacles(number_of_obstacles, number_of_fake_cars, having_fake_obstacle, edge_lanes_list, x_y_dic):
     while True:
        for total_obstacles in range(number_of_obstacles + number_of_fake_cars * having_fake_obstacle):
-            obstacle_lane_id, obstacle_node_id = find_obstacle_lane_and_node()
+            obstacle_lane_id, obstacle_node_id = find_obstacle_lane_and_node(edge_lanes_list, x_y_dic)
             obstacle = Obstacle(obstacle_node_id, obstacle_lane_id)
             obstacle.init(DG)
             obstacles_list.append(obstacle)
@@ -190,8 +190,7 @@ def find_OD_node_and_lane():   #find_OD_node_and_lane()の定義
   return origin_lane_id, destination_lane_id, origin_node_id, destination_node_id
   
   
-def find_obstacle_lane_and_node(edge_lanes_list, x_y_dic):  
-  for _ in range(number_of_obstacles):  
+def find_obstacle_lane_and_node(edge_lanes_list, x_y_dic):    
         while True:
             obstacle_lane_id = np.random.randint(len(edge_lanes_list))
             obstacle_node_id = x_y_dic[(edge_lanes_list[obstacle_lane_id].node_x_list[-1], edge_lanes_list[obstacle_lane_id].node_y_list[-1])]
@@ -215,7 +214,7 @@ def find_obstacle_lane_and_node(edge_lanes_list, x_y_dic):
         obstacle_node_id_list.append(obstacle_node_id)
         pair_node_id_list.append(x_y_dic[(edge_lanes_list[obstacle_lane_id].node_x_list[0], edge_lanes_list[obstacle_lane_id].node_y_list[0])])
 
-  return obstacle_lane_id, obstacle_node_id, obstacle_node_id_list, pair_node_id_list
+        return obstacle_lane_id, obstacle_node_id, obstacle_node_id_list, pair_node_id_list
  
  
 #ネットワークの描画

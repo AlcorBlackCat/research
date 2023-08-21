@@ -122,6 +122,7 @@ def create_road_segments(edge_lanes_list):
 def create_obstacles(number_of_obstacles, number_of_fake_cars, having_fake_obstacle):
     while True:
        for total_obstacles in range(number_of_obstacles + number_of_fake_cars * having_fake_obstacle):
+            obstacle_lane_id, obstacle_node_id = find_obstacle_lane_and_node()
             obstacle = Obstacle(obstacle_node_id, obstacle_lane_id)
             obstacle.init(DG)
             obstacles_list.append(obstacle)

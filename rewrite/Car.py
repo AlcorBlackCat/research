@@ -208,7 +208,7 @@ class Car:
                 else:
                     pass
 
-   def astar_shortest_path(self):  #経路再計算
+    def astar_shortest_path(self):  #経路再計算
         self.shortest_path = nx.astar_path(self.DG_copied, x_y_dic[(self.current_position[0], self.current_position[1])], self.destination_node_id)
 
 

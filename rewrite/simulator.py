@@ -11,8 +11,8 @@ import copy
 import csv
 from matplotlib.animation import FuncAnimation
 
-import animation
-import functions
+from animation import *
+from functions import *
 from Car import Car, fake_Car
 from Obstacle import Obstacle, fake_Obstacle
 from lane import Lane
@@ -30,7 +30,7 @@ for item in edges_all_list:
     edges_obstacles_dic[ item ] = []
     edges_cars_dic[ item ] = []
 
-create_obstacles(number_of_obstacles, number_of_fake_cars, having_fake_obstaclei)
+create_obstacles(number_of_obstacles, number_of_fake_cars, having_fake_obstacle)
 
 create_cars(number_of_cars, number_of_fake_cars)
 

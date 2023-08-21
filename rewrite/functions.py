@@ -20,7 +20,7 @@ from Obstacle import Obstacle, fake_Obstacle
 from lane import Lane
 from grid_road_segment import RoadSegment
 
-infilename = "grid5×5.net.xml"
+infilename = "grid5x5.net.xml"
 
 number_of_cars = 300 
 number_of_obstacles = 10 
@@ -189,8 +189,8 @@ def find_OD_node_and_lane():   #find_OD_node_and_lane()の定義
   return origin_lane_id, destination_lane_id, origin_node_id, destination_node_id
   
   
-def find_obstacle_lane_and_node():   #関数の定義
-  for _ in range(number_of_obstacles):  # 指定した回数だけ繰り返し処理を行うfor 文を追加
+def find_obstacle_lane_and_node(edge_lanes_list, x_y_dic):  
+  for _ in range(number_of_obstacles):  
         while True:
             obstacle_lane_id = np.random.randint(len(edge_lanes_list))
             obstacle_node_id = x_y_dic[(edge_lanes_list[obstacle_lane_id].node_x_list[-1], edge_lanes_list[obstacle_lane_id].node_y_list[-1])]
@@ -214,7 +214,7 @@ def find_obstacle_lane_and_node():   #関数の定義
         obstacle_node_id_list.append(obstacle_node_id)
         pair_node_id_list.append(x_y_dic[(edge_lanes_list[obstacle_lane_id].node_x_list[0], edge_lanes_list[obstacle_lane_id].node_y_list[0])])
 
-  return obstacle_lane_id, obstacle_node_id, obstacle_node_id_list, pair_node_id_list   #戻り値にobstacle_node_id_list, pair_node_id_listの追加
+  return obstacle_lane_id, obstacle_node_id, obstacle_node_id_list, pair_node_id_list
  
  
 #ネットワークの描画

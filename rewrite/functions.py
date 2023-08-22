@@ -25,7 +25,6 @@ infilename = "grid5x5.net.xml"
 number_of_cars = 300 
 number_of_obstacles = 10 
 number_of_fake_cars = 1 
-number_of_fake_obstacles = 1 
 having_fake_obstacle = 1   #車が持つ偽の通行不能箇所数
 opportunistic_communication_rate = 1.0  
 sensitivity = 1.0
@@ -47,6 +46,9 @@ number_of_shortest_path_changes_list = []
 moving_distance_list = []
 time_list = []
 
+x_y_dic = {}
+edge_lanes_list = []
+
 DG = nx.DiGraph()
 
 def read_parse_netxml(infilename):
@@ -61,14 +63,14 @@ def read_parse_netxml(infilename):
 def create_road_network(root):
   # read edge tagged data for reading the road network
   # create data structure of road network using NetworkX
-  x_y_dic = {} # input: node's x,y pos, output: node id
+  global x_y_dic # input: node's x,y pos, output: node id
   lane_dic = {}
   edge_length_dic = {}
   node_id = 0
   lane_id = 0
 
   DG = nx.DiGraph() # Directed graph of road network
-  edge_lanes_list = [] # list of lane instances
+  global edge_lanes_list # list of lane instances
   for child in root:
     if child.tag == "edge":
       lane = Lane()
@@ -123,14 +125,14 @@ def create_road_segments(edge_lanes_list):
 
 def create_obstacles(number_of_obstacles, number_of_fake_cars, having_fake_obstacle, edge_lanes_list, x_y_dic):
     while True:
-       for total_obstacles in range(number_of_obstacles + number_of_fake_cars * having_fake_obstacle):
+        for total_obstacles in range(number_of_obstacles + number_of_fake_cars * having_fake_obstacle):
             obstacle_lane_id, obstacle_node_id = find_obstacle_lane_and_node(edge_lanes_list, x_y_dic)
             obstacle = Obstacle(obstacle_node_id, obstacle_lane_id)
             obstacle.init(DG)
             obstacles_list.append(obstacle)
             edges_obstacles_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])].append(obstacle)
             edges_cars_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])].append(obstacle)
-       if nx.is_weakly_connected(DG) == True:
+        if nx.is_weakly_connected(DG) == True:
            break
 
 def create_cars(number_of_cars, number_of_fake_cars):

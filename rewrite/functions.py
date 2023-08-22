@@ -47,6 +47,8 @@ number_of_shortest_path_changes_list = []
 moving_distance_list = []
 time_list = []
 
+DG = nx.DiGraph()
+
 def read_parse_netxml(infilename):
   # open file
   infile = open(infilename, "r")
@@ -214,7 +216,7 @@ def find_obstacle_lane_and_node(edge_lanes_list, x_y_dic):
         obstacle_node_id_list.append(obstacle_node_id)
         pair_node_id_list.append(x_y_dic[(edge_lanes_list[obstacle_lane_id].node_x_list[0], edge_lanes_list[obstacle_lane_id].node_y_list[0])])
 
-        return obstacle_lane_id, obstacle_node_id, obstacle_node_id_list, pair_node_id_list
+        return obstacle_lane_id, obstacle_node_id
  
  
 #ネットワークの描画

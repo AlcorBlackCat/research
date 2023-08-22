@@ -123,17 +123,7 @@ def create_road_segments(edge_lanes_list):
         break
   return road_segments_list
 
-def create_obstacles(number_of_obstacles, number_of_fake_cars, having_fake_obstacle, edge_lanes_list, x_y_dic):
-    while True:
-        for total_obstacles in range(number_of_obstacles + number_of_fake_cars * having_fake_obstacle):
-            obstacle_lane_id, obstacle_node_id = find_obstacle_lane_and_node(edge_lanes_list, x_y_dic)
-            obstacle = Obstacle(obstacle_node_id, obstacle_lane_id)
-            obstacle.init(DG)
-            obstacles_list.append(obstacle)
-            edges_obstacles_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])].append(obstacle)
-            edges_cars_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])].append(obstacle)
-        if nx.is_weakly_connected(DG) == True:
-           break
+
 
 def create_cars(number_of_cars, number_of_fake_cars):
     DG_copied = copy.deepcopy(DG)
@@ -152,7 +142,7 @@ def create_cars(number_of_cars, number_of_fake_cars):
     car.init(DG)
     cars_list.append(car)
     edges_cars_dic[(edge_lanes_list[origin_lane_id].node_id_list[0], edge_lanes_list[origin_lane_id].node_id_list[1])].append(car)
-    if oppcomm_rate * number_of_cars < j:
+    if  opportunistic_communication_rate * number_of_cars < j:
       car.opportunistic_communication_frag = False
 
     for k in range(number_of_fake_cars):
@@ -175,9 +165,9 @@ def create_cars(number_of_cars, number_of_fake_cars):
 def find_OD_node_and_lane():   #find_OD_node_and_lane()の定義
 
   origin_lane_id = np.random.randint(len(edge_lanes_list))  #開始地点Id
-  destination_lane_id = np.random.randint(len(edge_lane_list))  #　目的地id
+  destination_lane_id = np.random.randint(len(edge_lanes_list))  #　目的地id
   if origin_lane_id == destination_lane_id:                #開始位置と目的地が同じ場合の処理
-    while origin_lane_id == destinat_lane_id:
+    while origin_lane_id == destination_lane_id:
         destination_lane_id = np.random.randint(len(edge_lanes_list))  #edge_lanes_listの長さの範囲の整数の乱数を返す
 
   origin_node_id = x_y_dic[(edge_lanes_list[origin_lane_id].node_x_list[0], edge_lanes_list[origin_lane_id].node_y_list[0])]   #開始地点の辞書の作成？
@@ -219,23 +209,29 @@ def find_obstacle_lane_and_node(edge_lanes_list, x_y_dic):
         pair_node_id_list.append(x_y_dic[(edge_lanes_list[obstacle_lane_id].node_x_list[0], edge_lanes_list[obstacle_lane_id].node_y_list[0])])
 
         return obstacle_lane_id, obstacle_node_id
+
+
+def create_obstacles(number_of_obstacles, number_of_fake_cars, having_fake_obstacle, edge_lanes_list, x_y_dic):
+    while True:
+        for total_obstacles in range(number_of_obstacles + number_of_fake_cars * having_fake_obstacle):
+            obstacle_lane_id, obstacle_node_id = find_obstacle_lane_and_node(edge_lanes_list, x_y_dic)
+            obstacle = Obstacle(obstacle_node_id, obstacle_lane_id)
+            obstacle.init(DG)
+            obstacles_list.append(obstacle)
+            edges_obstacles_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])].append(obstacle)
+            edges_cars_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])].append(obstacle)
+        if nx.is_weakly_connected(DG) == True:
+           break
  
  
 #ネットワークの描画
-def draw_road_network(DG):  #draw_road_networkという関数の定義  引数はDG
-  pos=nx.get_node_attributes(DG,'pos')   #get_node_attributesはグラフからノード属性を取得する　　DGのグラフからposという属性を取り出す？
-  edge_color = nx.get_edge_attributes(DG, "color")   #get_edge_attributesはグラフからedge属性を取得する  DGのグラフからcolorという属性を取り出す
-  nx.draw(DG, pos, node_size=1, arrowsize=5, with_labels=True, font_size=0.8, font_color="red", edge_color=edge_color.values())   #ネットワークの可視化
+def draw_road_network(DG):  
+  pos=nx.get_node_attributes(DG,'pos')   
+  edge_color = nx.get_edge_attributes(DG, "color")   
+  nx.draw(DG, pos, node_size=1, arrowsize=5, with_labels=True, font_size=0.8, font_color="red", edge_color=edge_color.values())   
 
 
-#  For initializing animation settings   (アニメーション設定を初期化する場合)
-def init():
-  line1.set_data([], [])  #グラフにプロットする普通車の初期化
-  line2.set_data([], [])  #通行不能箇所
-  line3.set_data([], [])  #悪意を持った車両
-  line4.set_data([], [])  #偽の通行不能箇所
-  title.set_text("Simulation step: 0")   #titeleに（）内の文字をセット？
-  return line1, line2, line3, line4, title
+
   
   
 

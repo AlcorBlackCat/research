@@ -1,3 +1,8 @@
+from functions import *
+from Car import *
+from Obstacle import *
+
+
 def animate(time):
     global xdata, ydata, Fxdata,Fydata,avoid_count,math_count,passing_comunication,goal_count #xdata, ydata = carのx,yのid?  passing_comunication = すれ違い通信
     global goal_time_list, number_of_shortest_path_changes_list, number_of_opportunistic_communication_list, moving_distance_list, time_list
@@ -31,7 +36,7 @@ def animate(time):
         #障害物があればUターン
         if car_forward_pt.__class__.__name__ != "Car" and car_forward_pt.__class__.__name__ != "fakeCar" and diff_dist <= 20: #前方にあるのが車じゃない（障害物なら）　なおかつ　その距離（車間距離）が20以下なら
             if type(car_forward_pt) == Obstacle:
-                x_new, y_new = car.U_turn(edges_cars_dic, lane_dic, edge_lanes_list, x_y_dic, obstacle_node_id_list) # 新しいx, y　のidに（Uターンする）
+                x_new, y_new = num_car.U_turn(edges_cars_dic, lane_dic, edge_lanes_list, x_y_dic, obstacle_node_id_list) # 新しいx, y　のidに（Uターンする）
 
             #偽の障害物なら通過
             elif type(car_forward_pt) == fake_Obstacle:
@@ -58,14 +63,14 @@ def plot_car_and_obstacle(cars_list,edges_cars_dic, sensitivity, lane_dic, edge_
     fake_obstacle_y = []
 
     for i in cars_list:
-        x_new, y_new = car.move(edges_cars_dic, sensitivity, lane_dic, edge_length_dic)
+        x_new, y_new = i.move(edges_cars_dic, sensitivity, lane_dic, edge_length_dic)
         if car_forward_pt.__class__.name__ != "Car" and diff_dist <= 20:
             if type(car_forward_pt) == Obstacle:
                 x_new, y_new = car.U_turn(edges_cars_dic, lane_dic, edge_lanes_list, x_y_dic, obstacle_node_id_list)
 
         xdata.append(x_new)
         ydata.append(y_new)
-        if type(cras_list[i]) == Car:
+        if type(cars_list[i]) == Car:
             Fxdata.append(x_new)
             Fydata.append(y_new)
 

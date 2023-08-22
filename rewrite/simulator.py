@@ -13,10 +13,11 @@ from matplotlib.animation import FuncAnimation
 
 from animation import *
 from functions import *
-from Car import Car, fake_Car
-from Obstacle import Obstacle, fake_Obstacle
-from lane import Lane
-from grid_road_segment import RoadSegment
+from Car import *
+from Obstacle import *
+from lane import *
+from grid_road_segment import *
+from rewrite.functions import *
 
 root = read_parse_netxml(infilename)
 x_y_dic, lane_dic, edge_length_dic, DG, edge_lanes_list = create_road_network(root)
@@ -34,6 +35,6 @@ create_obstacles(number_of_obstacles, number_of_fake_cars, having_fake_obstacle,
 
 create_cars(number_of_cars, number_of_fake_cars)
 
-plot_car_and_obstacle(cars_list,edges_cars_dic, sensitivity, lane_dic, edge_length_dic,car_forward_pt,diff_dist,obstacle_list,fakeobstacle_list,edge_lanes_list, x_y_dic, obstacle_node_id_list)
+plot_car_and_obstacle(cars_list,edges_cars_dic, sensitivity, lane_dic, edge_length_dic,car_forward_pt,diff_dist,obstacle_list,fake_obstacle_list,edge_lanes_list, x_y_dic, obstacle_node_id_list)
 
 

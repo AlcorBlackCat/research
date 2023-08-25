@@ -29,10 +29,10 @@ having_fake_obstacle = 1   #車が持つ偽の通行不能箇所数
 opportunistic_communication_rate = 1.0  
 sensitivity = 1.0
 
-np.random.seed(123456)
+np.random.seed(202)
 
 obstacles_list = []
-fakeobs_list = []
+fake_obstacles_list = []
 obstacle_node_id_list = []
 fakeobs_node_id_list = []
 pair_node_id_list = []
@@ -48,6 +48,11 @@ time_list = []
 
 x_y_dic = {}
 edge_lanes_list = []
+edges_cars_dic = {}
+edges_obstacles_dic = {}
+
+car_forward_pt = 0  #初期化するときの型不明
+diff_dist = 0
 
 DG = nx.DiGraph()
 
@@ -157,7 +162,7 @@ def create_cars(number_of_cars, number_of_fake_cars):
     shortest_path = nx.astar_path(DG, origin_node_id, destination_node_id)
     fakecar = fake_Car(origin_node_id, destination_node_id, destination_lane_id, shortest_path, origin_lane_id, DG)
     fakecar.init(DG)
-    fakecar.create_fake_obstacle(obstacle_list, fake_obstacle_list, having_fake_obstacle)
+    fakecar.create_fake_obstacle(obstacles_list, fake_obstacles_list, having_fake_obstacle)
     cars_list.append(fakecar)
     edges_cars_dic[(edge_lanes_list[origin_lane_id].node_id_list[0], edge_lanes_list[origin_lane_id].node_id_list[1])].append(fakecar)
 
@@ -215,8 +220,6 @@ def create_obstacles(number_of_obstacles, number_of_fake_cars, having_fake_obsta
     while True:
         for total_obstacles in range(number_of_obstacles + number_of_fake_cars * having_fake_obstacle):
             obstacle_lane_id, obstacle_node_id = find_obstacle_lane_and_node(edge_lanes_list, x_y_dic)
-            print(obstacle_lane_id)
-            print(obstacle_node_id)
             obstacle = Obstacle(obstacle_node_id, obstacle_lane_id)
             obstacle.init(DG)
             obstacles_list.append(obstacle)

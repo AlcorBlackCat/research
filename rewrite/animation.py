@@ -8,7 +8,8 @@ from Obstacle import *
 def animate(time):
     global xdata, ydata, Fxdata,Fydata,avoid_count,math_count,passing_comunication,goal_count #xdata, ydata = carのx,yのid?  passing_comunication = すれ違い通信
     global goal_time_list, number_of_shortest_path_changes_list, number_of_opportunistic_communication_list, moving_distance_list, time_list
-    
+    global edges_cars_dic
+
     xdata = [], ydata = []
     Fxdata = [],Fydata = [] #fakecarのx, y id
 

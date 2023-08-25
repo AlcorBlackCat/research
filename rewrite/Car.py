@@ -6,6 +6,8 @@ import math
 import copy
 import pprint
 
+from functions import *
+
 class Car:
     def __init__(self, orig_node_id, dest_node_id, dest_lane_id, shortest_path, current_lane_id, DG ):
         self.orig_node_id  = orig_node_id #起点
@@ -145,7 +147,7 @@ class Car:
         self.current_end_node = self.DG_copied.nodes[current_end_node_id]["pos"]
 
         #障害物を含む辺の削除？
-        for i in obstacle_list:
+        for i in obstacles_list:
             if self.DG_copied.has_edge(*i):
                 self.DG_copied.remove_edge(*i)
 
@@ -208,7 +210,7 @@ class Car:
                 else:
                     pass
 
-    def astar_shortest_path(self):  #経路再計算
+    def astar_shortest_path(self, x_y_dic):  #経路再計算
         self.shortest_path = nx.astar_path(self.DG_copied, x_y_dic[(self.current_position[0], self.current_position[1])], self.destination_node_id)
 
 
@@ -218,12 +220,15 @@ class Car:
 
 class fake_Car(Car):  #経路選択にfakeobsの影響を受けない、fakeobsを最初から持ってる仕様に
     #TODO  fake_obstacle_dicの追加、経路計算時にfake_obstacle_dicを除外　obstaclelistからランダムで抽選→fakeobsに変換
+    #super().__init__()
     def creat_fake_obstacle():
         fake_obstacle_dic = []
+        global fake_obstacles_list
+        global having_fake_obstacle
 
         for j in range(having_fake_obstacle):
-            a = np.random.choice(obstacle_list)
+            a = np.random.choice(obstacles_list)
             fake_obstacle_dic.append(a)
-            fake_obstacle_list.append(a) 
-            obstacle_list.remove(a)
+            fake_obstacles_list.appned(a)  #要print
+            obstacles_list.remove(a)
 

@@ -29,7 +29,7 @@ having_fake_obstacle = 1   #車が持つ偽の通行不能箇所数
 opportunistic_communication_rate = 1.0  
 sensitivity = 1.0
 
-np.random.seed(202)
+np.random.seed(123456)
 
 obstacles_list = []
 fakeobs_list = []
@@ -215,6 +215,8 @@ def create_obstacles(number_of_obstacles, number_of_fake_cars, having_fake_obsta
     while True:
         for total_obstacles in range(number_of_obstacles + number_of_fake_cars * having_fake_obstacle):
             obstacle_lane_id, obstacle_node_id = find_obstacle_lane_and_node(edge_lanes_list, x_y_dic)
+            print(obstacle_lane_id)
+            print(obstacle_node_id)
             obstacle = Obstacle(obstacle_node_id, obstacle_lane_id)
             obstacle.init(DG)
             obstacles_list.append(obstacle)

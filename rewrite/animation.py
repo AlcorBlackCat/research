@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from functions import *
 from Car import *
 from Obstacle import *

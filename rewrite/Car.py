@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 import networkx as nx
 import numpy as np
 import math
@@ -117,7 +119,6 @@ class Car:
 
         current_start_node_id = self.shortest_path[self.current_sp_index - 1]
         current_end_node_id = self.shortest_path[self.current_sp_index]
-        edges_cars_dic[(current_start_node_id, current_end_node_id)].remove(self)
         pre_start_node_id = current_start_node_id
         pre_end_node_id = current_end_node_id
 
@@ -170,7 +171,6 @@ class Car:
         current_edge_attributes = self.DG_copied.get_edge_data(current_start_node_id, current_end_node_id)
         self.current_max_speed = current_edge_attributes["speed"]
         self.current_distance = current_edge_attributes["weight"]
-        edges_cars_dic[(current_start_node_id, current_end_node_id)].append(self)
 
         return x_new, y_new
        

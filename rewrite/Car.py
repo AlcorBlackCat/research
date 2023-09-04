@@ -218,12 +218,12 @@ class Car:
 
 class fake_Car(Car):  #経路選択にfakeobsの影響を受けない、fakeobsを最初から持ってる仕様に
     #TODO  fake_obstacle_dicの追加、経路計算時にfake_obstacle_dicを除外　obstaclelistからランダムで抽選→fakeobsに変換
-    def creat_fake_obstacle():
-        fake_obstacle_dic = []
+    def create_fake_obstacle(self, obstacles_list, fake_obstacles_list, having_fake_obstacle):
+        self.fake_obstacles_dic = []
 
         for j in range(having_fake_obstacle):
-            a = np.random.choice(obstacle_list)
-            fake_obstacle_dic.append(a)
-            fake_obstacle_list.append(a) 
-            obstacle_list.remove(a)
+            a = np.random.choice(obstacles_list)
+            self.fake_obstacles_dic.append(a)
+            fake_obstacles_list.append(a) 
+            obstacles_list.remove(a)
 

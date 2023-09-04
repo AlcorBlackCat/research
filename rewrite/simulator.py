@@ -35,7 +35,7 @@ for item in edges_all_list:
 
 create_obstacles(number_of_obstacles, number_of_fake_cars, having_fake_obstacle,edge_lanes_list, x_y_dic, edges_obstacles_dic, edges_cars_dic, DG)
 
-create_cars(number_of_cars, number_of_fake_cars)
+create_cars(number_of_cars, number_of_fake_cars, edges_cars_dic, DG)
 
 plot_car_and_obstacle(cars_list,edges_cars_dic, sensitivity, lane_dic, edge_length_dic,car_forward_pt,diff_dist,obstacle_list,fake_obstacle_list,edge_lanes_list, x_y_dic, obstacle_node_id_list)
 

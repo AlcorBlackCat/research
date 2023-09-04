@@ -32,7 +32,7 @@ sensitivity = 1.0
 np.random.seed(123456)
 
 obstacles_list = []
-fakeobs_list = []
+fake_obstacles_list = []
 obstacle_node_id_list = []
 fakeobs_node_id_list = []
 pair_node_id_list = []
@@ -127,7 +127,7 @@ def create_road_segments(edge_lanes_list):
 
 
 
-def create_cars(number_of_cars, number_of_fake_cars):
+def create_cars(number_of_cars, number_of_fake_cars, edges_cars_dic, DG):
     DG_copied = copy.deepcopy(DG)
     for i in range(len(obstacle_node_id_list)):
         DG_copied.remove_edge(pair_node_id_list[i], obstacle_node_id_list[i])
@@ -159,7 +159,7 @@ def create_cars(number_of_cars, number_of_fake_cars):
     shortest_path = nx.astar_path(DG, origin_node_id, destination_node_id)
     fakecar = fake_Car(origin_node_id, destination_node_id, destination_lane_id, shortest_path, origin_lane_id, DG)
     fakecar.init(DG)
-    fakecar.create_fake_obstacle(obstacle_list, fake_obstacle_list, having_fake_obstacle)
+    fakecar.create_fake_obstacle(obstacles_list, fake_obstacles_list, having_fake_obstacle)
     cars_list.append(fakecar)
     edges_cars_dic[(edge_lanes_list[origin_lane_id].node_id_list[0], edge_lanes_list[origin_lane_id].node_id_list[1])].append(fakecar)
 

@@ -9,6 +9,7 @@ class Obstacle:
         self.obstacle_lane_id = obstacle_lane_id
 
     def init(self, DG):
+        print(self.obstacle_node_id)
         self.current_position = DG.nodes[ self.obstacle_node_id ]["pos"]
 
 class fake_Obstacle(Obstacle):

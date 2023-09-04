@@ -7,10 +7,10 @@ import copy
 import pprint
 
 class Car:
-    def __init__(self, orig_node_id, dest_node_id, dest_lane_id, shortest_path, current_lane_id, DG ):
-        self.orig_node_id  = orig_node_id #起点
-        self.dest_node_id  = dest_node_id #終点
-        self.dest_lane_id = dest_lane_id    #道路
+    def __init__(self, origin_node_id, destination_node_id, destination_lane_id, shortest_path, current_lane_id, DG ):
+        self.origin_node_id  = origin_node_id #起点
+        self.destination_node_id  = destination_node_id #終点
+        self.destination_lane_id = destination_lane_id    #道路
         self.shortest_path = shortest_path #最短経路
         self.current_lane_id =  current_lane_id #現在のレーン
         self.current_sp_index = 0 #最短経路のindex
@@ -151,14 +151,14 @@ class Car:
 
         while True:
             try:
-                self.shortest_path = nx.astar_path(self.DG_copied, current_start_node_id, self.dest_node_id)
+                self.shortest_path = nx.astar_path(self.DG_copied, current_start_node_id, self.destination_node_id)
                 break
             except Exception:
-                self.dest_lane_id = np.random.randint(len(edge_lanes_list))
-                self.dest_node_id = x_y_dic[(edge_lanes_list[self.dest_lane_id].node_x_list[-1], edge_lanes_list[self.dest_lane_id].node_y_list[-1])]
-                while self.dest_node_id in obstacle_node_id_list or self.current_lane_id == self.dest_lane_id:
-                    self.dest_lane_id = np.random.randint(len(edge_lanes_list))
-                    self.dest_node_id = x_y_dic[(edge_lanes_list[self.dest_lane_id].node_x_list[-1], edge_lanes_list[self.dest_lane_id].node_y_list[-1])]
+                self.destination_lane_id = np.random.randint(len(edge_lanes_list))
+                self.destination_node_id = x_y_dic[(edge_lanes_list[self.destination_lane_id].node_x_list[-1], edge_lanes_list[self.destination_lane_id].node_y_list[-1])]
+                while self.destination_node_id in obstacle_node_id_list or self.current_lane_id == self.destinaton_lane_id:
+                    self.destination_lane_id = np.random.randint(len(edge_lanes_list))
+                    self.destination_node_id = x_y_dic[(edge_lanes_list[self.destination_lane_id].node_x_list[-1], edge_lanes_list[self.destination_lane_id].node_y_list[-1])]
 
         self.number_of_shortest_path_changes += 1
         self.current_sp_index = 0

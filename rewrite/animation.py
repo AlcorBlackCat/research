@@ -48,7 +48,7 @@ def animate(time):
         #ただ今後の予定ではfake_flagで一般車両か、悪意を持った車両なのかを管理するのではなく、Carクラスとfake_Carクラスで区別する予定なのでfake_flagは削除予定
         #よって、Uturnするときの条件をcar_forward_ptで管理するのではなくて、Obstacleクラスで管理するように定義したい
 
-def plot_car_and_obstacle(cars_list,edges_cars_dic, sensitivity, lane_dic, edge_length_dic,car_forward_pt,diff_dist,obstacle_list,fakeobstacle_list,edge_lanes_list, x_y_dic, obstacle_node_id_list):
+def plot_car_and_obstacle(cars_list,edges_cars_dic, sensitivity, lane_dic, edge_length_dic,car_forward_pt,diff_dist,obstacles_list,fake_obstacles_list,edge_lanes_list, x_y_dic, obstacle_node_id_list):
     line1.set_data([], [])
     line2.set_data([], [])
     line3.set_data([], [])
@@ -76,13 +76,13 @@ def plot_car_and_obstacle(cars_list,edges_cars_dic, sensitivity, lane_dic, edge_
             Fxdata.append(x_new)
             Fydata.append(y_new)
 
-    for j in obstacle_list:
+    for j in obstacles_list:
         x_new = j.current_position[0]   
         y_new = j.current_position[1]
         obstacle_x.append(x_new)
         obstacle_y.append(y_new)
 
-    for k in fakeobstacle_list:
+    for k in fake_obstacles_list:
         x_new = k.current_position[0]
         y_new = k.current_position[1]
         fake_obstacle_x.append(x_new)

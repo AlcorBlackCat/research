@@ -31,9 +31,9 @@ for item in edges_all_list:
     edges_obstacles_dic[ item ] = []
     edges_cars_dic[ item ] = []
 
-print(DG.nodes[637])
+#print(edges_obstacles_dic)
 
-create_obstacles(number_of_obstacles, number_of_fake_cars, having_fake_obstacle,edge_lanes_list, x_y_dic, DG)
+create_obstacles(number_of_obstacles, number_of_fake_cars, having_fake_obstacle,edge_lanes_list, x_y_dic, edges_obstacles_dic, edges_cars_dic, DG)
 
 create_cars(number_of_cars, number_of_fake_cars)
 

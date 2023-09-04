@@ -49,6 +49,7 @@ time_list = []
 x_y_dic = {}
 edge_lanes_list = []
 edges_obstacles_dic = {}
+edges_cars_dic = {}
 
 DG = nx.DiGraph()
 
@@ -212,7 +213,7 @@ def find_obstacle_lane_and_node(edge_lanes_list, x_y_dic):
         return obstacle_lane_id, obstacle_node_id
 
 
-def create_obstacles(number_of_obstacles, number_of_fake_cars, having_fake_obstacle, edge_lanes_list, x_y_dic, DG):
+def create_obstacles(number_of_obstacles, number_of_fake_cars, having_fake_obstacle, edge_lanes_list, x_y_dic, edges_obstacles_dic, edges_cars_dic, DG):
     while True:
         for total_obstacles in range(number_of_obstacles + number_of_fake_cars * having_fake_obstacle):
             obstacle_lane_id, obstacle_node_id = find_obstacle_lane_and_node(edge_lanes_list, x_y_dic)

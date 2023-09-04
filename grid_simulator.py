@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3 
 # coding: utf-8
 
 ### import modules ###
@@ -135,7 +135,7 @@ def create_road_segments(edge_lanes_list):   #関数定義
 def find_OD_node_and_lane():   #find_OD_node_and_lane()の定義
 
   origin_lane_id = np.random.randint(len(edge_lanes_list))  #edge_lanes_listの長さの範囲の整数の乱数を返す
-  destination_lane_id = origin_lane_id  # destination_lane_idをorigin_lane_idとする
+  destination_lane_id = origin_lane_id  # destination_lane_idをorigin_lane_idとする　目的地id
   while origin_lane_id == destination_lane_id:  #origin_lane_id と destination_lane_idが等しい間繰り返す
     destination_lane_id = np.random.randint(len(edge_lanes_list))  #edge_lanes_listの長さの範囲の整数の乱数を返す
 
@@ -177,6 +177,31 @@ def find_obstacle_lane_and_node():   #関数の定義
  
   return obstacle_lane_id, obstacle_node_id
 
+"""
+def find_fakeobs_lane_and_node():
+  while True:
+    fakeobs_lane_id = np.random.randint(len(edge_lanes_list))
+    fakeobs_node_id = x_y_dic[(edge_lanes_list[fakeobs_lane_id].node_x_list[-1], edge_lanes_list[fakeobs_lane_id].node_y_list[-1])]
+    oncoming_lane = None
+    for i in range(len(edge_lanes_list) - 1):
+      for j in range(i + 1, len(edge_lanes_list)):   
+        if edge_lanes_list[i].from_id == edge_lanes_list[j].to_id and edge_lanes_list[i].to_id == edge_lanes_list[j].from_id:   
+          if edge_lanes_list[fakeobs_lane_id] == edge_lanes_list[i]:  
+            oncoming_lane = edge_lanes_list[j]   
+          elif edge_lanes_list[fakeobs_lane_id] == edge_lanes_list[j]: 
+            oncoming_lane = edge_lanes_list[i]
+    if oncoming_lane == None:   
+      if fakeobs_node_id not in fakeobs_node_id_list:   
+        break
+    elif oncoming_lane != None:  
+      if x_y_dic[(oncoming_lane.node_x_list[-1], oncoming_lane.node_y_list[-1])] not in obstacle_node_id_list and fakeobs_node_id not in obstacle_node_id_list:   
+        break
+  fakeobs_node_id_list.append(obstacle_node_id)   
+  fakepair_node_id_list.append(x_y_dic[(edge_lanes_list[obstacle_lane_id].node_x_list[0], edge_lanes_list[obstacle_lane_id].node_y_list[0])])
+
+  return fakeobs_lane_id, fakeobs_node_id
+"""
+  
 #ネットワークの描画
 def draw_road_network(DG):  #draw_road_networkという関数の定義  引数はDG
   pos=nx.get_node_attributes(DG,'pos')   #get_node_attributesはグラフからノード属性を取得する　　DGのグラフからposという属性を取り出す？
@@ -185,10 +210,10 @@ def draw_road_network(DG):  #draw_road_networkという関数の定義  引数�
 
 #  For initializing animation settings   (アニメーション設定を初期化する場合)
 def init():
-  line1.set_data([], [])  #空line1にデータをセット作成？
-  line2.set_data([], [])
-  line3.set_data([], [])
-  line4.set_data([], [])
+  line1.set_data([], [])  #グラフにプロットする普通車の初期化
+  line2.set_data([], [])  #通行不能箇所
+  line3.set_data([], [])  #悪意を持った車両
+  line4.set_data([], [])  #偽の通行不能箇所
   title.set_text("Simulation step: 0")   #titeleに（）内の文字をセット？
   return line1, line2, line3, line4, title
 
@@ -296,7 +321,7 @@ def animate(time):
                               car.current_start_node = car.DG_copied.nodes[current_start_node_id]["pos"]   #開始地点のnodeをcarのDGのcurrent_start_node_idから"pos"という属性でコピーする？
                               car.current_position = car.DG_copied.nodes[current_start_node_id]["pos"]  #nodeのコピー　ポジション
                               current_end_node_id = car.shortest_path[car.current_sp_index + 1]  #終了地点？ゴール地点を  保存されていた？最短経路から更新する
-                              #print(current_start_node_id, current_end_node_id)  #ちゃんとできているか確認用
+                              print(current_start_node_id, current_end_node_id)  #ちゃんとできているか確認用
                               car.current_end_node = car.DG_copied.nodes[current_end_node_id]["pos"]  #車が保持している？終了地点をDGのnodeのcurrent_end_node_idという要素からコピー？
                               current_edge_attributes = car.DG_copied.get_edge_data(current_start_node_id, current_end_node_id)  #現在の終了地点　　get_edge_data(u, v, デフォルト = なし)[ソース]     エッジ (u, v) に関連付けられた属性ディクショナリを返します  
                               car.current_max_speed = current_edge_attributes["speed"]  #carの現在の最大速度？ = edgeの"speed"という属性に更新
@@ -423,6 +448,7 @@ if __name__ == "__main__":   #もし__name__ == "__main__"ならば
   obstacle_node_id_list = []
   fakeobs_node_id_list = []
   pair_node_id_list = []
+  fakepair_node_id_list = [] #追加
   cars_list = []
   fakecars_list = []
   obstacle_dic = {}
@@ -440,11 +466,11 @@ if __name__ == "__main__":   #もし__name__ == "__main__"ならば
 
   #edges_all_list = DG.edges()
   #create obstacles
-  while True:   #Trueである間繰り返す
+  while True:   #Trueである間繰り返す (無限に繰り返す)
     for i in range(number_of_obstacles):  #number_of_obstaclesの長さだけ繰り返す
       obstacle_lane_id, obstacle_node_id = find_obstacle_lane_and_node()  #find_obstacle_lane_and_nodeは障害物を見つける関数として定義している
-      obstacle = Obstacle(obstacle_node_id, obstacle_lane_id, False)  #別のソースファイルのObstacleから引っ張ってきている？
-      obstacle.init(DG)  #obstacleでinit(要素？)を実行   https://atmarkit.itmedia.co.jp/ait/articles/2306/20/news022.htmlより
+      obstacle = Obstacle(obstacle_node_id, obstacle_lane_id, False)  #別のソースファイルのObstacleから引っ張ってきている？  ここのFalseはfakeflagのこと
+      obstacle.init(DG)  #obstacleでinit(要素？)を実行   https://atmarkit.itmedia.co.jp/ait/articles/2306/20/news022.htmlより        
       obstacles_list.append(obstacle)  #リストに要素の追加
       cars_list.append(obstacle)  #cars_listに要素の追加
       edges_obstacles_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])].append(obstacle)  #辞書の[]内で指定した要素にobstacleから追加？？
@@ -453,6 +479,44 @@ if __name__ == "__main__":   #もし__name__ == "__main__"ならば
       #print(obstacle_dic)
     if nx.is_weakly_connected(DG) == True:  #nx.is_weakly_connectedは弱い接続の有向グラフをテストします。有向グラフは、グラフが、節点間のエッジの方向が無視される場合に接続されます。グラフが強く接続されている場合(つまり、グラフが接続されている場合) 方向性を考慮しても)、それは定義上弱いです 接続もされています。
       break
+
+      """
+    else:  #作業中
+      for i in range(number_of_obstacles):  #number_of_obstaclesの長さだけ繰り返す
+        obstacle_lane_id, obstacle_node_id = find_obstacle_lane_and_node()  #find_obstacle_lane_and_nodeは障害物を見つける関数として定義している
+        obstacle = Obstacle(obstacle_node_id, obstacle_lane_id, False)  #別のソースファイルのObstacleから引っ張ってきている？  ここのFalseはfakeflagのこと
+        obstacle.init(DG)  #obstacleでinit(要素？)を実行   https://atmarkit.itmedia.co.jp/ait/articles/2306/20/news022.htmlより
+        obstacles_list.append(obstacle)  #リストに要素の追加
+        cars_list.append(obstacle)  #cars_listに要素の追加
+        edges_obstacles_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])].append(obstacle)  #辞書の[]内で指定した要素にobstacleから追加？？
+        edges_cars_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])].append(obstacle)   #辞書の[]内で指定した要素にobstacleから追加？？
+        obstacle_dic[edge_lanes_list[obstacle_lane_id].node_id_list[1]] = False
+        for j in range(number_of_fake_obstacles):
+          fakeobs_lane_id, fakeobs_node_id = find_fakeobs_lane_and_node()  
+          obstacle = Obstacle(fakeobs_node_id, fakeobs_lane_id, True)  
+          obstacle.init(DG)  
+          obstacles_list.append(obstacle)  
+          cars_list.append(obstacle) 
+          edges_obstacles_dic[(edge_lanes_list[fakeobs_lane_id].node_id_list[0], edge_lanes_list[fakeobs_lane_id].node_id_list[1])].append(obstacle)
+          edges_cars_dic[(edge_lanes_list[fakeobs_lane_id].node_id_list[0], edge_lanes_list[fakeobs_lane_id].node_id_list[1])].append(obstacle)
+          obstacle_dic[edge_lanes_list[fakeobs_lane_id].node_id_list[1]] = True
+          #fakeobs_node_id_list.append(obstacle_node_id_list[number_of_obstacles + i])
+        #print(obstacle_dic)
+        #print(fakeobs_node_id_list)
+        if nx.is_weakly_connected(DG) == True:   #nx.is_weakly_connectedは弱い接続の有向グラフをテストします
+          break
+        """
+      #number_of_all_obstacles = int(number_of_obstacles) + int(number_of_fake_obstacles)
+      #for i in range(number_of_all_obstacles):
+        #obstacle_lane_id, obstacle_node_id = find_obstacle_lane_and_node() 
+        #obstacle = Obstacle(obstacle_node_id, obstacle_lane_id, True) 
+        #obstacle.init(DG)  
+        #fakeobs_list.append(obstacle)
+        #cars_list.append(obstacle)
+        #edges_obstacles_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])].append(obstacle)
+        #edges_cars_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])].append(obstacle)
+        
+      
 
   #偽の通行不能箇所(仮)
   while True:
@@ -466,10 +530,16 @@ if __name__ == "__main__":   #もし__name__ == "__main__"ならば
       edges_cars_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])].append(obstacle)
       obstacle_dic[edge_lanes_list[obstacle_lane_id].node_id_list[1]] = True  #指定した辞書の要素をTrueに　　452行目とは逆の処理　　なぜ？
       fakeobs_node_id_list.append(obstacle_node_id_list[number_of_obstacles + i])  #偽の通行不能個所のノードidリストに（）内のものを追加
+
     #print(obstacle_dic)
     #print(fakeobs_node_id_list)
     if nx.is_weakly_connected(DG) == True:   #nx.is_weakly_connectedは弱い接続の有向グラフをテストします  おそらくシミュレーションの道路が連結（どこか袋小路になっていないか確認）
+     print(obstacle_dic)
+     print(fakeobs_node_id_list)
+    if nx.is_weakly_connected(DG) == True:   #nx.is_weakly_connectedは弱い接続の有向グラフをテストします
       break
+
+  
 
   #車両作成
   DG_copied2 = copy.deepcopy(DG)  #DG_copied2にコピーする　　深いコピーでは、一方のいかなる変更も他方には全く影響を与えない完全に別物のオブジェクトを作ることができます。　　　https://www.headboost.jp/python-copy-deepcopy/#index_id3
@@ -555,9 +625,10 @@ if __name__ == "__main__":   #もし__name__ == "__main__"ならば
   draw_road_network(DG)  #181行目より、draw_road_networkという関数を使ってネットワークを描画
 
 
-  print("通行不能箇所の辞書" + str(obstacle_dic))
+  #print("通行不能箇所の辞書" + str(obstacle_dic))
   #print("remath:" + str(math_count) + " through:" + str(avoid_count) + " pass:" + str(passing_comunication))
   print("### Start of simulation ###")
   ani = FuncAnimation(fig, animate, frames=range(1000), init_func=init, blit=True, interval= 10)  #アニメーションを作成するのに必要な情報を渡せばアニメーションを作成してくれます
   #ani.save("grid-sanimation.gif", writer='imagemagick')
   plt.show()  #複数のFigureを表示したいときに、使えたりします  実行されたとき始めてウィンドウが立ち上がり、そのウィンドウにグラフが表示されるといった状況になるはず
+

@@ -52,7 +52,7 @@ class Car:
   def update_current_speed(self, sensitivity, inter_car_distance):
     self.current_speed += sensitivity*( self.V(inter_car_distance) - self.current_speed )
 
-  def move(self, edges_cars_dic, sensitivity, lane_dic, edge_length_dic):
+  def move(self, edges_cars_dic, sensitivity, lane_dic, edge_length_dic): #sensitivity = 感度
 
     self.elapsed_time += 1  #elapsed_time = 経過時間
     #self.moving_distance += edge_length_dic[lane_dic[self.shortest_path[self.current_sp_index]]]
@@ -225,3 +225,5 @@ class Car:
     #print('U_turn end!')
 
     return x_new, y_new
+  
+

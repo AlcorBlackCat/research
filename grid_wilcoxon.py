@@ -26,7 +26,7 @@ for file_name1 in os.listdir(dir1): #ファイルディレクトリ「dir1」の
 
     duration_list1 = []
     distance_list1 = []
-    infile1 = open(file_path1,"r",encoding="utf-8")　#上で作ったパスのファイルをinfile1としてutf-8でエンコードして開く
+    infile1 = open(file_path1,"r",encoding="utf-8") #上で作ったパスのファイルをinfile1としてutf-8でエンコードして開く
     line_counter = 0
     for line in infile1:
         data_list = line.replace("¥n","").split(",") #改行を削除、「,」で区切る

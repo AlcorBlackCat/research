@@ -133,35 +133,35 @@ def create_cars(number_of_cars, number_of_fake_cars, edges_cars_dic, DG):
         DG_copied.remove_edge(pair_node_id_list[i], obstacle_node_id_list[i])
     for j in range(number_of_cars):
         origin_lane_id, destination_lane_id, origin_node_id, destination_node_id = find_OD_node_and_lane()
-    while True:
-      try:
-        shortest_path = nx.astar_path(DG_copied, origin_node_id, destination_node_id)
-        break
-      except Exception:
-        origin_lane_id, destination_lane_id, origin_node_id, destination_node_id = find_OD_node_and_lane()
-    shortest_path = nx.dijkstra_path(DG, origin_node_id, destination_node_id)
-    car = Car(origin_node_id, destination_node_id, destination_lane_id, shortest_path, origin_lane_id, DG)
-    car.init(DG)
-    cars_list.append(car)
-    edges_cars_dic[(edge_lanes_list[origin_lane_id].node_id_list[0], edge_lanes_list[origin_lane_id].node_id_list[1])].append(car)
-    if  opportunistic_communication_rate * number_of_cars < j:
-      car.opportunistic_communication_frag = False
+        while True:
+            try:
+                shortest_path = nx.astar_path(DG_copied, origin_node_id, destination_node_id)
+                break
+            except Exception:
+                origin_lane_id, destination_lane_id, origin_node_id, destination_node_id = find_OD_node_and_lane()
+        shortest_path = nx.dijkstra_path(DG, origin_node_id, destination_node_id)
+        car = Car(origin_node_id, destination_node_id, destination_lane_id, shortest_path, origin_lane_id, DG)
+        car.init(DG)
+        cars_list.append(car)
+        edges_cars_dic[(edge_lanes_list[origin_lane_id].node_id_list[0], edge_lanes_list[origin_lane_id].node_id_list[1])].append(car)
+        if  opportunistic_communication_rate * number_of_cars < j:
+            car.opportunistic_communication_frag = False
 
     for k in range(number_of_fake_cars):
         origin_lane_id, destination_lane_id, origin_node_id, destination_node_id = find_OD_node_and_lane()
-    while True:
-      try:
-        shortest_path = nx.astar_path(DG_copied, origin_node_id, destination_node_id)
-        break
-      except Exception:
-        origin_lane_id, destination_lane_id, origin_node_id, destination_node_id = find_OD_node_and_lane()
+        while True:
+            try:
+                shortest_path = nx.astar_path(DG_copied, origin_node_id, destination_node_id)
+                break
+            except Exception:
+                origin_lane_id, destination_lane_id, origin_node_id, destination_node_id = find_OD_node_and_lane()
 
-    shortest_path = nx.astar_path(DG, origin_node_id, destination_node_id)
-    fakecar = fake_Car(origin_node_id, destination_node_id, destination_lane_id, shortest_path, origin_lane_id, DG)
-    fakecar.init(DG)
-    fakecar.create_fake_obstacle(obstacles_list, fake_obstacles_list, having_fake_obstacle)
-    cars_list.append(fakecar)
-    edges_cars_dic[(edge_lanes_list[origin_lane_id].node_id_list[0], edge_lanes_list[origin_lane_id].node_id_list[1])].append(fakecar)
+        shortest_path = nx.astar_path(DG, origin_node_id, destination_node_id)
+        fakecar = fake_Car(origin_node_id, destination_node_id, destination_lane_id, shortest_path, origin_lane_id, DG)
+        fakecar.init(DG)
+        fakecar.create_fake_obstacle(obstacles_list, fake_obstacles_list, having_fake_obstacle)
+        cars_list.append(fakecar)
+        edges_cars_dic[(edge_lanes_list[origin_lane_id].node_id_list[0], edge_lanes_list[origin_lane_id].node_id_list[1])].append(fakecar)
 
 
 def find_OD_node_and_lane():   #find_OD_node_and_lane()の定義

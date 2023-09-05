@@ -1,9 +1,20 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.8
 # -*- coding: utf-8 -*-
 from functions import *
 from Car import *
 from Obstacle import *
 
+import matplotlib.pyplot as plt
+
+
+fig = plt.subplot()
+ax = plt.subplot()
+
+line1, = plt.plot([], [], color="green", marker="s", linestyle="", markersize=5)
+line2, = plt.plot([], [], color="red", marker="s", linestyle="", markersize=5)
+line3, = plt.plot([], [], color="blue", marker="s", linestyle="", markersize=5)
+line4, = plt.plot([], [], color="cyan", marker="s", linestyle="", markersize=5)
+title = ax.text(20.0, -20.0, "", va="center")
 
 def animate(time):
     global xdata, ydata, Fxdata,Fydata,avoid_count,math_count,passing_comunication,goal_count #xdata, ydata = carのx,yのid?  passing_comunication = すれ違い通信
@@ -48,7 +59,8 @@ def animate(time):
         #ただ今後の予定ではfake_flagで一般車両か、悪意を持った車両なのかを管理するのではなく、Carクラスとfake_Carクラスで区別する予定なのでfake_flagは削除予定
         #よって、Uturnするときの条件をcar_forward_ptで管理するのではなくて、Obstacleクラスで管理するように定義したい
 
-def plot_car_and_obstacle(cars_list,edges_cars_dic, sensitivity, lane_dic, edge_length_dic,car_forward_pt,diff_dist,obstacles_list,fake_obstacles_list,edge_lanes_list, x_y_dic, obstacle_node_id_list):
+def plot_car_and_obstacle(cars_list,edges_cars_dic, sensitivity, lane_dic, edge_length_dic,obstacles_list,fake_obstacles_list,edge_lanes_list, x_y_dic, obstacle_node_id_list):
+    global line1, line2, line3, line4
     line1.set_data([], [])
     line2.set_data([], [])
     line3.set_data([], [])
@@ -63,10 +75,12 @@ def plot_car_and_obstacle(cars_list,edges_cars_dic, sensitivity, lane_dic, edge_
     obstacle_y = []
     fake_obstacle_x = []
     fake_obstacle_y = []
+    
+    print(cars_list)
 
     for i in cars_list:
         x_new, y_new = i.move(edges_cars_dic, sensitivity, lane_dic, edge_length_dic)
-        if car_forward_pt.__class__.name__ != "Car" and diff_dist <= 20:
+        if car_forward_pt.__class__.name__ != "Car" and car_forward_pt.__class__.name__ != "fake_Car" and diff_dist <= 20:
             if type(car_forward_pt) == Obstacle:
                 x_new, y_new = car.U_turn(edges_cars_dic, lane_dic, edge_lanes_list, x_y_dic, obstacle_node_id_list)
 
@@ -118,11 +132,11 @@ def plot_car_and_obstacle(cars_list,edges_cars_dic, sensitivity, lane_dic, edge_
 
 
     #アニメーションの描画
-    line1, = plt.plot([], [], color="green", marker="s", linestyle="", markersize=5)
+    """line1, = plt.plot([], [], color="green", marker="s", linestyle="", markersize=5)
     line2, = plt.plot([], [], color="red", marker="s", linestyle="", markersize=5)
     line3, = plt.plot([], [], color="blue", marker="s", linestyle="", markersize=5)
     line4, = plt.plot([], [], color="cyan", marker="s", linestyle="", markersize=5)
-    title = ax.text(20.0, -20.0, "", va="center")
+    title = ax.text(20.0, -20.0, "", va="center")"""
 
     draw_road_network(DG) #道路ネットワークの読み込み
 

@@ -4,9 +4,6 @@ from functions import *
 from Car import *
 from Obstacle import *
 
-import matplotlib.pyplot as plt
-
-
 fig = plt.subplot()
 ax = plt.subplot()
 
@@ -75,8 +72,6 @@ def plot_car_and_obstacle(cars_list,edges_cars_dic, sensitivity, lane_dic, edge_
     obstacle_y = []
     fake_obstacle_x = []
     fake_obstacle_y = []
-    
-    print(cars_list)
 
     for i in cars_list:
         x_new, y_new = i.move(edges_cars_dic, sensitivity, lane_dic, edge_length_dic)

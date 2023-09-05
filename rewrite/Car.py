@@ -24,7 +24,7 @@ class Car:
         #self.number_of_opportunistic_communication = 0    #すれ違い通信数 未実装
         self.elapsed_time = 0 #経過時間
         self.moving_distance = 0  #移動距離
-        self.goal_arrived = False   #ゴール到着はFalse
+        self.goal_arrived_flag = False   #ゴール到着はFalse
         self.DG_copied = copy.deepcopy(DG)   #ディープコピーも一方のオブジェクトをもう一方に複製する動作　　オブジェクトがリストなどの属性を持っていたとして、シャシャローコピーはそのリストのコピーには参照を使うが、ディープコピーはリストの要素を再帰的にコピーして複製　DGをコピーする
         self.opportunistic_communication_frag = True  #すれ違い通信をするかどうか
         self.short_path = []  #最短経路?
@@ -59,9 +59,9 @@ class Car:
         if np.sqrt((self.current_position[0] - self.current_end_node[0])**2 + (self.current_position[1] - self.current_end_node[1])**2) < self.current_speed:
             # Reached the end of the lane, move to the next lane or destination
             if self.current_sp_index + 1 >= len(self.shortest_path):
-                self.goal_arrived = True
+                self.goal_arrived_flag = True
                 self.current_position = self.current_end_node
-                return self.current_position[0], self.current_position[1], self.goal_arrived, None, None
+                return self.current_position[0], self.current_position[1], self.goal_arrived_flag, None, None
                 
             self.current_sp_index += 1
             current_start_node_id = self.shortest_path[self.current_sp_index - 1]
@@ -110,7 +110,7 @@ class Car:
             else:
                 self.current_lane_id = lane_dic[self.shortest_path[self.current_sp_index]]
                 
-        return self.current_position[0], self.current_position[1], self.goal_arrived, car_forward_pt, diff_dist
+        return self.current_position[0], self.current_position[1], self.goal_arrived_flag, car_forward_pt, diff_dist
     
     def U_turn(self, edges_cars_dic, lane_dic, edge_lanes_list, x_y_dic, obstacle_node_id_list):  #Uターンのための関数を定義
         self.current_sp_index += 1
@@ -145,7 +145,7 @@ class Car:
         self.current_end_node = self.DG_copied.nodes[current_end_node_id]["pos"]
 
         #障害物を含む辺の削除？
-        for i in obstacle_list:
+        for i in obstacles_list:
             if self.DG_copied.has_edge(*i):
                 self.DG_copied.remove_edge(*i)
 

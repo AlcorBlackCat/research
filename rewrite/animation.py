@@ -4,8 +4,7 @@ from functions import *
 from Car import *
 from Obstacle import *
 
-fig = plt.subplot()
-ax = plt.subplot()
+fig, ax = plt.subplots()
 
 line1, = plt.plot([], [], color="green", marker="s", linestyle="", markersize=5)
 line2, = plt.plot([], [], color="red", marker="s", linestyle="", markersize=5)
@@ -15,10 +14,10 @@ title = ax.text(20.0, -20.0, "", va="center")
 
 def animate(time):
     global xdata, ydata, Fxdata,Fydata,avoid_count,math_count,passing_comunication,goal_count #xdata, ydata = carのx,yのid?  passing_comunication = すれ違い通信
-    global goal_time_list, number_of_shortest_path_changes_list, number_of_opportunistic_communication_list, moving_distance_list, time_list
+    global goal_time_list, number_of_shortest_path_changes_list, number_of_opportunistic_communication_list, moving_distance_list, time_list, lane_dic, edge_length_dic
     
-    xdata = [], ydata = []
-    Fxdata = [],Fydata = [] #fakecarのx, y id
+    xdata = []; ydata = []
+    Fxdata = []; Fydata = [] #fakecarのx, y id
 
     for num_car in cars_list:
         if num_car.__class__.__name__ == 'Car':
@@ -59,7 +58,7 @@ def animate(time):
         #よって、Uturnするときの条件をcar_forward_ptで管理するのではなくて、Obstacleクラスで管理するように定義したい
 
 def plot_car_and_obstacle(cars_list,edges_cars_dic, sensitivity, lane_dic, edge_length_dic,obstacles_list,fake_obstacles_list,edge_lanes_list, x_y_dic, obstacle_node_id_list):
-    global line1, line2, line3, line4
+    global line1, line2, line3, line4, fig, ax
     line1.set_data([], [])
     line2.set_data([], [])
     line3.set_data([], [])

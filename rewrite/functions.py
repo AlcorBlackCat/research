@@ -51,6 +51,9 @@ edge_lanes_list = []
 edges_obstacles_dic = {}
 edges_cars_dic = {}
 
+lane_dic = {}
+edge_length_dic = {}
+
 DG = nx.DiGraph()
 
 def read_parse_netxml(infilename):
@@ -140,7 +143,7 @@ def create_cars(number_of_cars, number_of_fake_cars, edges_cars_dic, DG):
             except Exception:
                 origin_lane_id, destination_lane_id, origin_node_id, destination_node_id = find_OD_node_and_lane()
         shortest_path = nx.dijkstra_path(DG, origin_node_id, destination_node_id)
-        car = Car(origin_node_id, destination_node_id, destination_lane_id, shortest_path, origin_lane_id, DG)
+        car = Car(origin_node_id, destination_node_id, destination_lane_id, shortest_path, origin_lane_id, edges_cars_dic, DG)
         car.init(DG)
         cars_list.append(car)
         edges_cars_dic[(edge_lanes_list[origin_lane_id].node_id_list[0], edge_lanes_list[origin_lane_id].node_id_list[1])].append(car)
@@ -157,7 +160,7 @@ def create_cars(number_of_cars, number_of_fake_cars, edges_cars_dic, DG):
                 origin_lane_id, destination_lane_id, origin_node_id, destination_node_id = find_OD_node_and_lane()
 
         shortest_path = nx.astar_path(DG, origin_node_id, destination_node_id)
-        fakecar = fake_Car(origin_node_id, destination_node_id, destination_lane_id, shortest_path, origin_lane_id, DG)
+        fakecar = fake_Car(origin_node_id, destination_node_id, destination_lane_id, shortest_path, origin_lane_id, edges_cars_dic, DG)
         fakecar.init(DG)
         fakecar.create_fake_obstacle(obstacles_list, fake_obstacles_list, having_fake_obstacle)
         cars_list.append(fakecar)

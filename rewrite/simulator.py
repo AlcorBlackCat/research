@@ -37,7 +37,7 @@ create_obstacles(number_of_obstacles, number_of_fake_cars, having_fake_obstacle,
 
 create_cars(number_of_cars, number_of_fake_cars, edges_cars_dic, DG)
 
-#print(cars_list)
+#print(edges_cars_dic)
 
 plot_car_and_obstacle(cars_list,edges_cars_dic, sensitivity, lane_dic, edge_length_dic, obstacles_list,fake_obstacles_list,edge_lanes_list, x_y_dic, obstacle_node_id_list)
 

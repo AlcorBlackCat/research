@@ -7,12 +7,13 @@ import copy
 import pprint
 
 class Car:
-    def __init__(self, origin_node_id, destination_node_id, destination_lane_id, shortest_path, current_lane_id, DG ):
+    def __init__(self, origin_node_id, destination_node_id, destination_lane_id, shortest_path, current_lane_id, edges_cars_dic, DG ):
         self.origin_node_id  = origin_node_id #起点
         self.destination_node_id  = destination_node_id #終点
         self.destination_lane_id = destination_lane_id    #道路
         self.shortest_path = shortest_path #最短経路
         self.current_lane_id =  current_lane_id #現在のレーン
+        #self.edges_cars_dic = edges_cars_dic
         self.current_sp_index = 0 #最短経路のindex
         self.current_speed = 0.0
         self.current_start_node = []   #最新または現在の開始位置
@@ -51,6 +52,8 @@ class Car:
 
     def move(self, edges_cars_dic, sensitivity, lane_dic, edge_length_dic):
         self.elapsed_time += 1
+
+        print(edges_cars_dic)
         
         direction_x = self.current_end_node[0] - self.current_position[0]
         direction_y = self.current_end_node[1] - self.current_position[1]

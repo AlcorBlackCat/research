@@ -57,25 +57,20 @@ edge_length_dic = {}
 DG = nx.DiGraph()
 
 def read_parse_netxml(infilename):
-  # open file
   infile = open(infilename, "r")
-
-  # parsing xml
   root = ET.fromstring(infile.read())
   #print(root.tag, root.attrib)
   return root
 
 def create_road_network(root):
-  # read edge tagged data for reading the road network
-  # create data structure of road network using NetworkX
   global x_y_dic # input: node's x,y pos, output: node id
   lane_dic = {}
   edge_length_dic = {}
   node_id = 0
   lane_id = 0
 
-  DG = nx.DiGraph() # Directed graph of road network
-  global edge_lanes_list # list of lane instances
+  DG = nx.DiGraph()
+  global edge_lanes_list
   for child in root:
     if child.tag == "edge":
       lane = Lane()
@@ -107,15 +102,14 @@ def create_road_network(root):
           old_node_y = float(data.split(",")[1])
           data_counter += 1
         for i in range(len(node_id_list)-1):
-          DG.add_edge(node_id_list[i], node_id_list[i+1], weight=distance_list[i], color="black", speed=float(child2.attrib["speed"])) # calculate weight here
+          DG.add_edge(node_id_list[i], node_id_list[i+1], weight=distance_list[i], color="black", speed=float(child2.attrib["speed"])) 
         if "from" in child.attrib and "to" in child.attrib:
-          #print("エッジ長とレーン番号の組",float(child2.attrib["length"]), lane_id)
           edge_length_dic[lane_id] = float(child2.attrib["length"])
           for i in range(len(node_x_list)):
             lane_dic[(x_y_dic[node_x_list[i],node_y_list[i]])] = lane_id
           lane_id += 1
           lane.set_others(float(child2.attrib["speed"]), node_id_list, node_x_list, node_y_list)
-          edge_lanes_list.append(lane)  # to modify here
+          edge_lanes_list.append(lane)
 
   return x_y_dic, lane_dic, edge_length_dic, DG, edge_lanes_list
 
@@ -167,24 +161,23 @@ def create_cars(number_of_cars, number_of_fake_cars, edges_cars_dic, DG):
         edges_cars_dic[(edge_lanes_list[origin_lane_id].node_id_list[0], edge_lanes_list[origin_lane_id].node_id_list[1])].append(fakecar)
 
 
-def find_OD_node_and_lane():   #find_OD_node_and_lane()の定義
-
-  origin_lane_id = np.random.randint(len(edge_lanes_list))  #開始地点Id
-  destination_lane_id = np.random.randint(len(edge_lanes_list))  #　目的地id
-  if origin_lane_id == destination_lane_id:                #開始位置と目的地が同じ場合の処理
+def find_OD_node_and_lane():   
+  origin_lane_id = np.random.randint(len(edge_lanes_list)) 
+  destination_lane_id = np.random.randint(len(edge_lanes_list))
+  if origin_lane_id == destination_lane_id:               
     while origin_lane_id == destination_lane_id:
-        destination_lane_id = np.random.randint(len(edge_lanes_list))  #edge_lanes_listの長さの範囲の整数の乱数を返す
+        destination_lane_id = np.random.randint(len(edge_lanes_list)) 
 
-  origin_node_id = x_y_dic[(edge_lanes_list[origin_lane_id].node_x_list[0], edge_lanes_list[origin_lane_id].node_y_list[0])]   #開始地点の辞書の作成？
-  destination_node_id = x_y_dic[(edge_lanes_list[destination_lane_id].node_x_list[-1], edge_lanes_list[destination_lane_id].node_y_list[-1])]  #終着地点の辞書の作成？
+  origin_node_id = x_y_dic[(edge_lanes_list[origin_lane_id].node_x_list[0], edge_lanes_list[origin_lane_id].node_y_list[0])] 
+  destination_node_id = x_y_dic[(edge_lanes_list[destination_lane_id].node_x_list[-1], edge_lanes_list[destination_lane_id].node_y_list[-1])]  
 
-  while origin_node_id in obstacle_node_id_list:  #obstacle_node_id_listという辞書にorigin_node_idが含まれている間繰り返す
-    origin_lane_id = np.random.randint(len(edge_lanes_list))  #edge_lanes_listの長さの範囲の整数の乱数を返す
-    origin_node_id = x_y_dic[(edge_lanes_list[origin_lane_id].node_x_list[0], edge_lanes_list[origin_lane_id].node_y_list[0])]  #開始地点の辞書の作成？
+  while origin_node_id in obstacle_node_id_list:  
+    origin_lane_id = np.random.randint(len(edge_lanes_list)) 
+    origin_node_id = x_y_dic[(edge_lanes_list[origin_lane_id].node_x_list[0], edge_lanes_list[origin_lane_id].node_y_list[0])]
 
-  while destination_node_id in obstacle_node_id_list or origin_lane_id == destination_lane_id: #obstacle_node_id_listという辞書にdestination_node_idが含まれている、またはorigin_lane_id == destination_lane_idである間繰り返す
-      destination_lane_id = np.random.randint(len(edge_lanes_list))   #edge_lanes_listの長さの範囲の整数の乱数を返す
-      destination_node_id = x_y_dic[(edge_lanes_list[destination_lane_id].node_x_list[-1], edge_lanes_list[destination_lane_id].node_y_list[-1])]  #終着地点の辞書の作成？
+  while destination_node_id in obstacle_node_id_list or origin_lane_id == destination_lane_id: 
+      destination_lane_id = np.random.randint(len(edge_lanes_list))  
+      destination_node_id = x_y_dic[(edge_lanes_list[destination_lane_id].node_x_list[-1], edge_lanes_list[destination_lane_id].node_y_list[-1])]  
 
   return origin_lane_id, destination_lane_id, origin_node_id, destination_node_id
   

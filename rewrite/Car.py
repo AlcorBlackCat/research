@@ -8,28 +8,28 @@ import pprint
 
 class Car:
     def __init__(self, origin_node_id, destination_node_id, destination_lane_id, shortest_path, current_lane_id, edges_cars_dic, DG ):
-        self.origin_node_id  = origin_node_id #起点
-        self.destination_node_id  = destination_node_id #終点
-        self.destination_lane_id = destination_lane_id    #道路
-        self.shortest_path = shortest_path #最短経路
-        self.current_lane_id =  current_lane_id #現在のレーン
+        self.origin_node_id  = origin_node_id 
+        self.destination_node_id  = destination_node_id 
+        self.destination_lane_id = destination_lane_id    
+        self.shortest_path = shortest_path 
+        self.current_lane_id =  current_lane_id 
         #self.edges_cars_dic = edges_cars_dic
-        self.current_sp_index = 0 #最短経路のindex
+        self.current_sp_index = 0 
         self.current_speed = 0.0
-        self.current_start_node = []   #最新または現在の開始位置
-        self.current_position = []   #最新または現在の位置
-        self.current_end_node = []    #最新または現在の終了位置
-        self.obstacles_info_list = []   #通行不能所
-        self.current_distance = 0.0   #最新または現在の道のり、距離
-        self.number_of_shortest_path_changes = 0   #最短経路の変更数
+        self.current_start_node = []   
+        self.current_position = []   
+        self.current_end_node = []   
+        self.obstacles_info_list = []  
+        self.current_distance = 0.0  
+        self.number_of_shortest_path_changes = 0  
         #self.number_of_opportunistic_communication = 0    #すれ違い通信数 未実装
-        self.elapsed_time = 0 #経過時間
-        self.moving_distance = 0  #移動距離
-        self.goal_arrived_flag = False   #ゴール到着はFalse
-        self.DG_copied = copy.deepcopy(DG)   #ディープコピーも一方のオブジェクトをもう一方に複製する動作　　オブジェクトがリストなどの属性を持っていたとして、シャシャローコピーはそのリストのコピーには参照を使うが、ディープコピーはリストの要素を再帰的にコピーして複製　DGをコピーする
-        self.opportunistic_communication_frag = True  #すれ違い通信をするかどうか
-        self.short_path = []  #最短経路?
-        self.obstacle_dic = {}   #通行不能個所の空の辞書？
+        self.elapsed_time = 0
+        self.moving_distance = 0 
+        self.goal_arrived_flag = False  
+        self.DG_copied = copy.deepcopy(DG)  
+        self.opportunistic_communication_frag = True 
+        self.short_path = [] 
+        self.obstacle_dic = {}   
     
 
     def init(self, DG):  
@@ -42,10 +42,10 @@ class Car:
         self.current_max_speed = current_edge_attributes["speed"]  
         self.current_distance = current_edge_attributes["weight"]
     
-    # Optimal Velocity Function to determine the current speed　　（現在の速度を決定する最適速度機能）
+
     #最適速度関数
     def V(self, inter_car_distance):
-        return  0.5 * self.current_max_speed * (np.tanh(inter_car_distance - 2) + np.tanh(2)) #車間距離から自身の速度を決定する
+        return  0.5 * self.current_max_speed * (np.tanh(inter_car_distance - 2) + np.tanh(2)) 
     
     def update_current_speed(self, sensitivity, inter_car_distance):
         self.current_speed += sensitivity * (self.V(inter_car_distance) - self.current_speed)
@@ -113,7 +113,7 @@ class Car:
                 
         return self.current_position[0], self.current_position[1], self.goal_arrived_flag, car_forward_pt, diff_dist
     
-    def U_turn(self, edges_cars_dic, lane_dic, edge_lanes_list, x_y_dic, obstacle_node_id_list):  #Uターンのための関数を定義
+    def U_turn(self, edges_cars_dic, lane_dic, edge_lanes_list, x_y_dic, obstacle_node_id_list): 
         self.current_sp_index += 1
         x_new = self.current_end_node[0]
         y_new = self.current_end_node[1]

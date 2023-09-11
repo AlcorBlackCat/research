@@ -52,8 +52,6 @@ class Car:
 
     def move(self, edges_cars_dic, sensitivity, lane_dic, edge_length_dic):
         self.elapsed_time += 1
-
-        print(edges_cars_dic)
         
         direction_x = self.current_end_node[0] - self.current_position[0]
         direction_y = self.current_end_node[1] - self.current_position[1]

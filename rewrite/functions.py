@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+test
+
 #関数を以下に集約
 #目次
 #8 グローバル変数

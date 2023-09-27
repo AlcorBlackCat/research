@@ -19,6 +19,10 @@ def animate(time):
     xdata = []; ydata = []
     Fxdata = []; Fydata = [] 
 
+    #for item in edges_all_list:  
+    #    edges_obstacles_dic[ item ] = [] 
+    #    edges_cars_dic[ item ] = [] 
+
     for num_car in cars_list:
         if num_car.__class__.__name__ == 'Car':
             time_list.append(time) 
@@ -77,9 +81,10 @@ def plot_car_and_obstacle(cars_list,edges_cars_dic, sensitivity, lane_dic, edge_
             if type(car_forward_pt) == Obstacle:
                 x_new, y_new = car.U_turn(edges_cars_dic, lane_dic, edge_lanes_list, x_y_dic, obstacle_node_id_list)
 
-        xdata.append(x_new)
-        ydata.append(y_new)
-        if type (i) == fake_Car:
+        if type(i) == Car:
+            xdata.append(x_new)
+            ydata.append(y_new)
+        elif type (i) == fake_Car:
             Fxdata.append(x_new)
             Fydata.append(y_new)
         
